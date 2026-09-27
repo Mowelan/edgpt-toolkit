@@ -8,10 +8,9 @@
   var MODELS = {
     edit: [
       { id: 'aleph', name: 'Runway Aleph 2.0', tip: '<strong>Aleph 2.0 bewerkt clips tot 30 seconden.</strong> Je kunt ook een frame dat je al hebt aangepast als voorbeeld meegeven. Dan ziet het model precies welke kant je op wilt.' },
-      { id: 'kling', name: 'Kling 3.0 Omni', tip: '<strong>Kling verwijst naar je clip met @Video.</strong> Upload je video en laat die verwijzing in de prompt staan, zo weet het model welke clip je bedoelt.' },
+      { id: 'kling', name: 'Kling 3.0 Omni', tip: '<strong>Kling verwijst naar je clip met [@Video].</strong> Laat die verwijzing in de prompt staan. Naast je clip kun je tot 4 beelden meesturen; die heten [@Image1], [@Image2], enzovoort.' },
       { id: 'seedance', name: 'Seedance 2.0', tip: '<strong>Seedance werkt met verwijzingen.</strong> Upload je clip en noem hem @Video 1 in je prompt. Een referentiebeeld geef je mee als @Image 1, bijvoorbeeld van de auto die erin moet.' },
       { id: 'luma', name: 'Luma Modify', tip: '<strong>Luma Modify (Ray3.2) wil een duidelijke instructie.</strong> Zorg dat wat je wilt veranderen in het eerste of laatste frame te zien is. Met de instellingen voor beweging en structuur bepaal je hoe dicht je bij het origineel blijft.' },
-      { id: 'omni', name: 'Gemini Omni', tip: '<strong>Omni bewerk je via een chat.</strong> Houd de opdracht kort. De regel "Keep everything else the same" zit er al in, want die raadt Google zelf aan.' },
       { id: 'general', name: 'Ander model', tip: '<strong>Deze structuur werkt in de meeste bewerkmodellen:</strong> zeg wat er verandert, waarin, en wat er hetzelfde moet blijven.' }
     ],
     make: [
@@ -78,12 +77,21 @@
   };
   var REF_LABEL = { image: 'Beeld', video: 'Video', audio: 'Audio' };
   var REF_WORD = { image: 'image', video: 'video', audio: 'audio' };
+  function gen(t, n) { return 'reference ' + REF_WORD[t] + ' ' + n; }
+  // Notatie en ondersteuning volgens de officiële gidsen (check 27-09-2026, referenties-check.md).
   var REF_STYLE = {
-    // standaard: neutrale verwijzing, werkt in elk model dat bijlagen leest
-    general: { name: function (t, n) { return 'reference ' + REF_WORD[t] + ' ' + n; } },
-    seedance: { name: function (t, n) { return '@' + REF_LABEL[t].replace('Beeld', 'Image') + ' ' + n; }, editVideoOffset: 1 }
+    general: { types: ['image', 'video', 'audio'], name: gen, note: 'Werkt het model met bijlagen? Dan verwijst de prompt er zo naar.' },
+    'edit:seedance': { types: ['image', 'video', 'audio'], max: { image: 9, video: 2, audio: 3 }, editVideoOffset: 1, name: function (t, n) { return '@' + { image: 'Image', video: 'Video', audio: 'Audio' }[t] + ' ' + n; }, note: 'Seedance: tot 9 beelden, 3 video\'s (inclusief je eigen clip) en 3 audiobestanden.' },
+    'make:seedance': { types: ['image', 'video', 'audio'], max: { image: 9, video: 3, audio: 3 }, name: function (t, n) { return '@' + { image: 'Image', video: 'Video', audio: 'Audio' }[t] + ' ' + n; }, note: 'Seedance: tot 9 beelden, 3 video\'s en 3 audiobestanden.' },
+    'edit:kling': { types: ['image'], max: { image: 4 }, name: function (t, n) { return '[@Image' + n + ']'; }, note: 'Kling: naast je clip tot 4 beelden, geen audio of extra video.' },
+    'make:kling': { types: ['image'], max: { image: 7 }, name: gen, note: 'Kling 3.0: beelden als start-, eindframe of element. Een vaste @-notatie staat niet in de gids, dus de prompt beschrijft het in gewone taal.' },
+    'edit:aleph': { types: ['image'], max: { image: 1 }, name: function () { return 'the reference image'; }, note: 'Aleph 2.0: één referentiebeeld naast je clip, geen audio of extra video.' },
+    'edit:luma': { types: ['image'], max: { image: 1 }, name: function () { return 'image1'; }, note: 'Luma Modify: één referentiebeeld (image1), bijvoorbeeld voor een personage.' },
+    'make:veo': { types: ['image'], max: { image: 3 }, name: function (t, n) { return 'the provided image ' + n; }, note: 'Veo 3.1: tot 3 referentiebeelden van een persoon, personage of product. Geen audio of video.' },
+    'make:runway': { types: ['image'], max: { image: 1 }, name: function () { return 'the input image'; }, note: 'Runway Gen-4.5: alleen een startbeeld als input.' },
+    'make:omni': { types: ['image', 'video'], max: { image: 6, video: 3 }, name: function (t, n) { return '<' + (t === 'image' ? 'IMAGE' : 'VIDEO') + '_REF_' + (n - 1) + '>'; }, note: 'Gemini Omni: beelden en tot 3 korte video\'s (max. 3 s), geen audio.' }
   };
-  function refStyle(m) { return REF_STYLE[m] || REF_STYLE.general; }
+  function refStyle(mode, m) { return REF_STYLE[mode + ':' + m] || REF_STYLE.general; }
 
   function opts(obj, def) {
     return Object.keys(obj).map(function (k) {
@@ -145,6 +153,10 @@
     '.vp-ref-fields{display:grid;grid-template-columns:1fr;gap:6px}' +
     '@media(min-width:520px){.vp-ref-fields{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}}' +
     '.vp-ref select,.vp-ref input{width:100%;font:14.5px var(--body);color:var(--ink);background:var(--cream);border:1.5px solid var(--line);border-radius:10px;padding:8px 10px}' +
+    '.vp-ref.is-off{opacity:.45}' +
+    '.vp-ref.is-off .vp-ref-tag::after{content:" niet bij dit model";font-family:var(--body);font-weight:600}' +
+    '.vp-refs-add button:disabled{opacity:.4;cursor:not-allowed}' +
+    '.vp-refs .vp-hint{margin-top:8px;font-size:13px}' +
     '.vp-ref-x{border:0;background:none;font-size:20px;line-height:1;color:var(--ink50);cursor:pointer;padding:4px}' +
     '.vp-ref-x:hover{color:var(--ink)}' +
     '.vp-step img{width:72px;height:72px;border-radius:12px;margin-bottom:12px;display:block}' +
@@ -357,8 +369,10 @@
     }
 
     function refSegs(mode, m) {
-      var st = refStyle(m), count = { image: 0, video: 0, audio: 0 }, o = [];
+      var st = refStyle(mode, m), count = { image: 0, video: 0, audio: 0 }, o = [];
       state.refs.forEach(function (r) {
+        if (st.types.indexOf(r.type) < 0) return;
+        if (st.max && count[r.type] >= (st.max[r.type] || 0)) return;
         count[r.type]++;
         var n = count[r.type] + (r.type === 'video' && mode === 'edit' && st.editVideoOffset ? st.editVideoOffset : 0);
         var R = st.name(r.type, n), D = (r.desc || '').trim().replace(/[.\s]+$/, '');
@@ -400,19 +414,19 @@
       var o;
       if (a === 'custom') {
         var C = v('custom').replace(/[.\s]+$/, '') || '...';
-        o = m === 'kling' ? [seg(null, 'In @Video, '), seg('act', C)]
+        o = m === 'kling' ? [seg(null, 'In [@Video], '), seg('act', C)]
           : m === 'seedance' ? [seg(null, 'Edit @Video 1: '), seg('act', C)]
           : [seg('act', cap(C))];
       } else if (m === 'kling') {
         o = {
-          replace: [seg('act', 'Change '), seg('what', W), seg('act', ' in @Video to '), seg('to', T)],
-          env: [seg('act', 'Change the background in @Video to '), seg('to', T)],
-          weather: [seg('act', 'Change the weather in @Video to '), seg('to', T)],
-          remove: [seg('act', 'Remove '), seg('what', W), seg('act', ' from @Video')],
-          add: [seg('act', 'Add '), seg('what', W), seg('act', ' to @Video')],
-          restyle: [seg('act', 'Change the style of @Video to '), seg('to', T)],
-          relight: [seg('act', 'Change the lighting in @Video to '), seg('to', T)],
-          angle: [seg('act', 'Show the scene in @Video from '), seg('to', T)]
+          replace: [seg('act', 'Change '), seg('what', W), seg('act', ' in [@Video] to '), seg('to', T)],
+          env: [seg('act', 'Change the background in [@Video] to '), seg('to', T)],
+          weather: [seg('act', 'Change the weather in [@Video] to '), seg('to', T)],
+          remove: [seg('act', 'Remove '), seg('what', W), seg('act', ' from [@Video]')],
+          add: [seg('act', 'Add '), seg('what', W), seg('act', ' to [@Video]')],
+          restyle: [seg('act', 'Change the style of [@Video] to '), seg('to', T)],
+          relight: [seg('act', 'Change the lighting in [@Video] to '), seg('to', T)],
+          angle: [seg('act', 'Show the scene in [@Video] from '), seg('to', T)]
         }[a];
       } else {
         o = {
@@ -447,6 +461,21 @@
       if (e.what) $('whatLbl').textContent = e.what;
       if (e.to) $('toLbl').textContent = e.to;
 
+      var st = refStyle(state.mode, m), seen = { image: 0, video: 0, audio: 0 };
+      ['image', 'video', 'audio'].forEach(function (t) {
+        var n = state.refs.filter(function (r) { return r.type === t; }).length;
+        var b = q('[data-add="' + t + '"]'), ok = st.types.indexOf(t) > -1 && (!st.max || n < (st.max[t] || 0));
+        b.disabled = !ok;
+        b.title = st.types.indexOf(t) < 0 ? 'Dit model ondersteunt geen ' + REF_LABEL[t].toLowerCase() + ' als referentie' : (ok ? '' : 'Maximum bereikt voor dit model');
+      });
+      [].forEach.call(root.querySelectorAll('.vp-ref'), function (row) {
+        var r = state.refs[+row.getAttribute('data-i')];
+        var off = st.types.indexOf(r.type) < 0 || (st.max && seen[r.type] >= (st.max[r.type] || 0));
+        if (!off) seen[r.type]++;
+        row.classList.toggle('is-off', !!off);
+      });
+      $('refhint').hidden = false;
+      $('refhint').textContent = st.note;
       var segs = make ? buildMake() : buildEdit();
       var out = '', text = '', lens = {}, order = [];
       segs.forEach(function (s) {
