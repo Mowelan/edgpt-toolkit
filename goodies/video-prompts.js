@@ -124,12 +124,15 @@
     '.vp-demo{margin-top:clamp(48px,7vw,80px)}' +
     '.vp-demo h2{font-size:clamp(28px,3.6vw,44px);margin-bottom:10px}' +
     '.vp-demo>p{color:var(--ink70);max-width:60ch;margin-bottom:24px}' +
-    '.vp-frames{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(140px,190px);justify-content:start;gap:14px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory}' +
-    '.vp-frame{margin:0;scroll-snap-align:start}' +
-    '.vp-frame img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:16px;display:block;background:var(--paper)}' +
+    '.vp-frames{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}' +
+    '@media(max-width:700px){.vp-frames{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:44%;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}}' +
+    '.vp-frame{margin:0;scroll-snap-align:start;position:relative}' +
+    '.vp-frame img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:50% 68%;border-radius:16px;display:block;background:var(--paper)}' +
+    '.vp-frame .vp-tag{position:absolute;top:10px;left:10px;font:700 11px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;padding:6px 9px;border-radius:999px;background:var(--purple);color:#fff}' +
+    '.vp-frame.is-orig .vp-tag{background:var(--yellow);color:var(--ink)}' +
     '.vp-frame figcaption{font-size:14px;color:var(--ink70);margin-top:8px;line-height:1.4}' +
     '.vp-frame figcaption b{display:block;color:var(--ink);font-family:var(--head);font-size:16px}' +
-    '.vp-frame.is-orig img{box-shadow:0 0 0 3px var(--ink)}' +
+
     '.vp-more,.vp-why{margin:0 0 16px}' +
     '.vp-more summary,.vp-why summary{cursor:pointer;font:600 14.5px var(--body);color:var(--ink70);list-style:none}' +
     '.vp-more summary::-webkit-details-marker,.vp-why summary::-webkit-details-marker,.vp-more-guide summary::-webkit-details-marker{display:none}' +
@@ -267,12 +270,12 @@
       '<div class="vp-tip" data-id="tip"></div>' +
       '<p class="vp-after">Wil je dat je hele team zo met AI werkt? <a href="' + 'https://www.ed-gpt.nl/trainingen' + '">Bekijk de trainingen &rarr;</a></p></section></div>' +
       '<section class="vp-demo"><h2>Zo zag het eruit in mijn video</h2>' +
-      '<p>Mijn eigen auto, gefilmd met een drone. Daarna liet ik AI de omgeving of de auto zelf vervangen. Links het origineel, daarnaast wat er van dezelfde opnames overbleef.</p>' +
+      '<p>Mijn eigen auto, gefilmd met een drone. Daarna liet ik AI de omgeving of de auto zelf vervangen.</p>' +
       '<div class="vp-frames">' +
-      '<figure class="vp-frame is-orig"><img src="' + base + 'img/still-origineel.webp" alt="Origineel: witte auto op een polderweg, gefilmd met een drone" loading="lazy" width="540" height="960"><figcaption><b>Origineel</b>Mijn eigen auto, gefilmd met een drone</figcaption></figure>' +
-      '<figure class="vp-frame"><img src="' + base + 'img/still-omgeving.webp" alt="Dezelfde auto op een bergweg langs een fjord" loading="lazy" width="540" height="960"><figcaption><b>Andere omgeving</b>Zelfde auto, ineens in de bergen</figcaption></figure>' +
-      '<figure class="vp-frame"><img src="' + base + 'img/still-pickup.webp" alt="Een blauwe pick-up op dezelfde polderweg, van bovenaf" loading="lazy" width="540" height="960"><figcaption><b>Iets vervangen</b>De auto wordt een pick-up</figcaption></figure>' +
-      '<figure class="vp-frame"><img src="' + base + 'img/still-vuilniswagen.webp" alt="Een vuilniswagen op dezelfde polderweg, van bovenaf" loading="lazy" width="540" height="960"><figcaption><b>Iets vervangen</b>Of gewoon een vuilniswagen</figcaption></figure>' +
+      '<figure class="vp-frame is-orig"><span class="vp-tag">Origineel</span><img src="' + base + 'img/still-origineel.webp" alt="Origineel: witte auto op een polderweg, gefilmd met een drone" loading="lazy" width="540" height="960"><figcaption><b>Origineel</b>Mijn eigen auto, gefilmd met een drone</figcaption></figure>' +
+      '<figure class="vp-frame"><span class="vp-tag">AI</span><img src="' + base + 'img/still-omgeving.webp" alt="Dezelfde auto op een bergweg langs een fjord" loading="lazy" width="540" height="960"><figcaption><b>Andere omgeving</b>Zelfde auto, ineens in de bergen</figcaption></figure>' +
+      '<figure class="vp-frame"><span class="vp-tag">AI</span><img src="' + base + 'img/still-pickup.webp" alt="Een blauwe pick-up op dezelfde polderweg, van bovenaf" loading="lazy" width="540" height="960"><figcaption><b>Iets vervangen</b>De auto wordt een pick-up</figcaption></figure>' +
+      '<figure class="vp-frame"><span class="vp-tag">AI</span><img src="' + base + 'img/still-vuilniswagen.webp" alt="Een vuilniswagen op dezelfde polderweg, van bovenaf" loading="lazy" width="540" height="960"><figcaption><b>Iets vervangen</b>Of gewoon een vuilniswagen</figcaption></figure>' +
       '</div></section>' +
 
       '<section class="vp-guide"><h2>Zo schrijf je een bewerk-prompt die werkt</h2>' +
