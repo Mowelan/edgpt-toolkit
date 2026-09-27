@@ -7,7 +7,7 @@
  * alleen voor mijn eigen administratie), date (JJJJ-MM-DD), updated (voetregel), training
  * (optionele eigen regel in het trainingsblok), art (optionele HTML voor het uitgelichte vlak),
  * href (alleen als de goodie een los bestand is, bv. een PDF; dan geen module nodig),
- * group ('video' = uit mijn video's, 'team' = voor je team), aliases (oude ankers), fullBleed (tool zonder eigen marge).
+ * icon/image (paden in public/img), group ('video' = uit mijn video's, 'team' = voor je team), aliases (oude ankers), fullBleed (tool zonder eigen marge).
  */
 window.EDGPT_TOOLKIT = {
   profile: {
@@ -21,6 +21,9 @@ window.EDGPT_TOOLKIT = {
       title: 'Video Prompt Bouwer',
       type: 'Tool',
       group: 'video',
+      icon: 'img/tool-video-prompts.webp',
+      image: 'img/hero-video-prompts.webp',
+      training: 'Ik geef praktische AI-trainingen voor marketing- en contentteams, met jullie eigen werk als oefenmateriaal. Wil je dat je team zo met AI-beeld en -video leert werken? In een kennismaking kijken we wat daarvoor nodig is.',
       line: 'Vervang een auto, een omgeving of het weer in je eigen video, of maak een compleet nieuw shot. Kies je model, vul in wat je wilt zien en kopieer je prompt.',
       short: 'De tool uit de drone-video: bouw je prompt voor AI-video in een minuut',
       video: 'mijn drone-video, waarin mijn auto steeds in iets anders verandert',
@@ -33,15 +36,15 @@ window.EDGPT_TOOLKIT = {
         'Keep <span style="--kc:var(--k-keep)">the camera movement and the road</span> unchanged.</p>'
     },
     /* Voor je team: overgenomen van de oude /tools-pagina (27-09-2026), modules via convert.py. */
-    { slug: 'keuzehulp', title: 'Model-keuzehulp', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
+    { slug: 'keuzehulp', icon: 'img/tool-keuzehulp.webp', title: 'Model-keuzehulp', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
       line: 'Acht vragen over je werk, je team en je data. Je krijgt een advies met uitleg per antwoord en een eerlijk nadeel.' },
-    { slug: 'promptbouwer', aliases: ['prompt'], title: 'Prompt-bouwer', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
+    { slug: 'promptbouwer', icon: 'img/tool-promptbouwer.webp', aliases: ['prompt'], title: 'Prompt-bouwer', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
       line: 'Rol, taak, context, voorbeelden, format, toon en beperkingen. Je krijgt een prompt die je zo in ChatGPT, Claude, Copilot of Gemini plakt.' },
-    { slug: 'tijdwinst', title: 'Tijdwinstcalculator', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
+    { slug: 'tijdwinst', icon: 'img/tool-tijdwinst.webp', title: 'Tijdwinstcalculator', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
       line: 'Teamgrootte, uren repetitief werk en uurtarief. Je ziet uren per maand en euro per jaar, afgezet tegen een dagdeel of een trainingsdag.' },
-    { slug: 'trainingskiezer', title: 'Trainingskiezer', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
+    { slug: 'trainingskiezer', icon: 'img/tool-trainingskiezer.webp', title: 'Trainingskiezer', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
       line: 'Vier vragen, zes trainingsvormen. Je krijgt de vorm die het beste past en een alternatief om mee te combineren.' },
-    { slug: 'ai-act', title: 'AI Act-check', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
+    { slug: 'ai-act', icon: 'img/tool-ai-act.webp', title: 'AI Act-check', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
       line: 'Zes vragen over gebruik, beleid, AI-geletterdheid en risico. Een oriëntatie op waar je staat, geen juridisch advies.' }
   ]
 };

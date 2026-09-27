@@ -9,14 +9,15 @@
     edit: [
       { id: 'aleph', name: 'Runway Aleph 2.0', tip: '<strong>Aleph 2.0 bewerkt clips tot 30 seconden.</strong> Je kunt ook een frame dat je al hebt aangepast als voorbeeld meegeven. Dan ziet het model precies welke kant je op wilt.' },
       { id: 'kling', name: 'Kling 3.0 Omni', tip: '<strong>Kling verwijst naar je clip met @Video.</strong> Upload je video en laat die verwijzing in de prompt staan, zo weet het model welke clip je bedoelt.' },
+      { id: 'seedance', name: 'Seedance 2.0', tip: '<strong>Seedance werkt met verwijzingen.</strong> Upload je clip en noem hem @Video 1 in je prompt. Een referentiebeeld geef je mee als @Image 1, bijvoorbeeld van de auto die erin moet.' },
       { id: 'luma', name: 'Luma Modify', tip: '<strong>Luma Modify (Ray3.2) wil een duidelijke instructie.</strong> Zorg dat wat je wilt veranderen in het eerste of laatste frame te zien is. Met de instellingen voor beweging en structuur bepaal je hoe dicht je bij het origineel blijft.' },
       { id: 'omni', name: 'Gemini Omni', tip: '<strong>Omni bewerk je via een chat.</strong> Houd de opdracht kort. De regel "Keep everything else the same" zit er al in, want die raadt Google zelf aan.' },
       { id: 'general', name: 'Ander model', tip: '<strong>Deze structuur werkt in de meeste bewerkmodellen:</strong> zeg wat er verandert, waarin, en wat er hetzelfde moet blijven.' }
     ],
     make: [
-      { id: 'veo', name: 'Veo 3.1', tip: '<strong>Veo maakt ook geluid.</strong> Laat je iemand praten, zet de tekst dan tussen aanhalingstekens: <code>A man says, "Check dit dan."</code>' },
       { id: 'kling', name: 'Kling 3.0', tip: '<strong>Kling 3.0 kan meerdere shots in één clip.</strong> Nummer ze dan: <code>Shot 1, ...</code> en <code>Shot 2, ...</code>' },
       { id: 'seedance', name: 'Seedance 2.0', tip: '<strong>Seedance werkt goed met eigen beelden.</strong> Verwijs ernaar met @, bijvoorbeeld <code>the car from @Image 1</code>.' },
+      { id: 'veo', name: 'Veo 3.1', tip: '<strong>Veo maakt ook geluid.</strong> Laat je iemand praten, zet de tekst dan tussen aanhalingstekens: <code>A man says, "Check dit dan."</code>' },
       { id: 'runway', name: 'Runway Gen-4.5', tip: '<strong>Runway raadt aan om positief te formuleren.</strong> Beschrijf wat je wél wilt zien. Begin je met een foto, beschrijf dan alleen de beweging.' },
       { id: 'omni', name: 'Gemini Omni', tip: '<strong>Omni maakt standaard meerdere shots.</strong> Daarom staat er "Single unbroken scene" achter je prompt. Haal het weg als je juist wel wisselende shots wilt.' }
     ]
@@ -57,14 +58,15 @@
     ['colors', 'Kleuren', 'the original colors']
   ];
   var EDIT = {
-    replace: { lbl: 'Iets vervangen (auto, product, persoon)', what: 'Wat wil je vervangen?', to: 'Waarmee?', w: 'the car', t: 'a classic Volkswagen Beetle in pastel blue', keep: ['camera', 'timing', 'bg'] },
-    env: { lbl: 'De omgeving vervangen', what: null, to: 'Welke omgeving?', w: '', t: 'a neon-lit street in Tokyo at night', keep: ['camera', 'subject', 'timing'] },
+    replace: { lbl: 'Iets vervangen', what: 'Wat wil je vervangen?', to: 'Waarmee?', w: 'the car', t: 'a classic Volkswagen Beetle in pastel blue', keep: ['camera', 'timing', 'bg'] },
+    env: { lbl: 'Andere omgeving', what: null, to: 'Welke omgeving?', w: '', t: 'a neon-lit street in Tokyo at night', keep: ['camera', 'subject', 'timing'] },
     weather: { lbl: 'Weer of seizoen', what: null, to: 'Welk weer of seizoen?', w: '', t: 'a snowy winter day with fresh snow on the road and falling snowflakes', keep: ['camera', 'subject', 'timing'] },
     remove: { lbl: 'Iets weghalen', what: 'Wat moet er weg?', to: null, w: 'the people in the background', t: '', keep: ['camera', 'subject', 'timing'] },
     add: { lbl: 'Iets toevoegen', what: 'Wat wil je toevoegen?', to: null, w: 'a hot air balloon drifting in the sky', t: '', keep: ['camera', 'subject', 'timing'] },
-    restyle: { lbl: 'Een andere stijl', what: null, to: 'Welke stijl?', w: '', t: 'a hand-drawn anime look', keep: ['camera', 'timing'] },
+    restyle: { lbl: 'Andere stijl', what: null, to: 'Welke stijl?', w: '', t: 'a hand-drawn anime look', keep: ['camera', 'timing'] },
     relight: { lbl: 'Ander licht of tijdstip', what: null, to: 'Welk licht of tijdstip?', w: '', t: 'warm golden hour light', keep: ['camera', 'subject', 'timing', 'bg'] },
-    angle: { lbl: 'Een nieuwe camerahoek', what: null, to: 'Welke camerahoek?', w: '', t: 'a low angle close to the road', keep: ['subject', 'bg'] }
+    angle: { lbl: 'Nieuwe camerahoek', what: null, to: 'Welke camerahoek?', w: '', t: 'a low angle close to the road', keep: ['subject', 'bg'] },
+    custom: { lbl: 'Eigen opdracht', what: null, to: null, custom: true, w: '', t: '', keep: ['camera', 'timing'] }
   };
   var NAMES = { subject: 'Onderwerp', action: 'Actie', setting: 'Plek', camera: 'Camera', light: 'Licht', style: 'Stijl', audio: 'Geluid', act: 'Opdracht', what: 'Wat', to: 'Wordt', keep: 'Blijft' };
 
@@ -73,14 +75,39 @@
       return '<option value="' + k + '"' + (k === def ? ' selected' : '') + '>' + obj[k][0] + '</option>';
     }).join('');
   }
-  function editOpts() {
-    return Object.keys(EDIT).map(function (k) { return '<option value="' + k + '">' + EDIT[k].lbl + '</option>'; }).join('');
+  function editOpts(base) {
+    return Object.keys(EDIT).map(function (k, i) {
+      return '<button type="button" class="vp-act" data-act="' + k + '" aria-pressed="' + (i === 0 ? 'true' : 'false') + '">' +
+        '<img src="' + base + 'img/act-' + k + '.webp" alt="" width="160" height="160" loading="lazy"><span>' + EDIT[k].lbl + '</span></button>';
+    }).join('');
   }
   function dot(k) { return '<span class="vp-dot" style="background:var(--k-' + k + ')"></span>'; }
 
   var CSS = '' +
-    '.vp-hero{max-width:780px;margin-bottom:32px}' +
+    '.vp-hero{display:grid;grid-template-columns:1fr;gap:20px;align-items:center;margin-bottom:32px}' +
+    '@media(min-width:900px){.vp-hero{grid-template-columns:1fr 1.15fr;gap:40px}}' +
     '.vp-hero h1{font-size:clamp(40px,6.4vw,72px);margin-bottom:18px}' +
+    '.vp-hero img{width:100%;height:auto;border-radius:20px;display:block}' +
+    '.vp-acts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}' +
+    '.vp-act{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 6px 10px;border:1.5px solid var(--line);border-radius:14px;background:var(--white);cursor:pointer;font:600 13.5px/1.2 var(--body);color:var(--ink);text-align:center}' +
+    '.vp-act img{width:100%;max-width:92px;height:auto;border-radius:10px}' +
+    '.vp-act:hover{border-color:var(--ink)}' +
+    '.vp-act[aria-pressed="true"]{border-color:var(--purple);box-shadow:0 0 0 2px var(--purple);background:var(--purple-tint)}' +
+    '.vp-opt{font-weight:500;color:var(--ink50);font-size:13px}' +
+    '.vp-field textarea{width:100%;font:15px/1.5 var(--body);color:var(--ink);background:var(--cream);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;resize:vertical}' +
+    '.vp-field textarea:focus{outline:none;border-color:var(--ink);background:var(--white)}' +
+    '.vp-after{margin-top:14px;font-size:14px;color:rgba(230,226,216,.8)}' +
+    '.vp-after a{color:var(--yellow);font-weight:700}' +
+    '.vp-demo{margin-top:clamp(48px,7vw,80px)}' +
+    '.vp-demo h2{font-size:clamp(28px,3.6vw,44px);margin-bottom:10px}' +
+    '.vp-demo>p{color:var(--ink70);max-width:60ch;margin-bottom:24px}' +
+    '.vp-frames{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(150px,1fr);gap:14px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory}' +
+    '.vp-frame{margin:0;scroll-snap-align:start}' +
+    '.vp-frame img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:16px;display:block;background:var(--paper)}' +
+    '.vp-frame figcaption{font-size:14px;color:var(--ink70);margin-top:8px;line-height:1.4}' +
+    '.vp-frame figcaption b{display:block;color:var(--ink);font-family:var(--head);font-size:16px}' +
+    '.vp-frame.is-orig img{box-shadow:0 0 0 3px var(--ink)}' +
+    '.vp-step img{width:72px;height:72px;border-radius:12px;margin-bottom:12px;display:block}' +
     '.vp-builder{display:grid;grid-template-columns:1fr;gap:18px}' +
     '@media(min-width:940px){.vp-builder{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);align-items:start}}' +
     '.vp-panel{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:clamp(18px,2.6vw,28px)}' +
@@ -139,11 +166,12 @@
     '.vp-part h3{font-size:18px;margin-bottom:6px;display:flex;align-items:center;gap:9px}' +
     '.vp-part p{margin:0;font-size:15.5px;color:var(--ink70)}';
 
-  function html() {
+  function html(base) {
     return '<style>' + CSS + '</style>' +
-      '<header class="vp-hero"><span class="tk-eyebrow">Tool · uit de drone-video</span>' +
+      '<header class="vp-hero"><div><span class="tk-eyebrow">Tool · uit de drone-video</span>' +
       '<h1>Video Prompt Bouwer</h1>' +
-      '<p class="tk-lede">Vervang de auto, de omgeving of het weer in een video die je al hebt. Of bouw een compleet nieuw shot. Kies je model, vul in wat je wilt zien en kopieer je prompt.</p></header>' +
+      '<p class="tk-lede">Vervang de auto, de omgeving of het weer in een video die je al hebt. Of bouw een compleet nieuw shot. Kies je model, vul in wat je wilt zien en kopieer je prompt.</p></div>' +
+      '<img src="' + base + 'img/hero-video-prompts.webp" alt="Illustratie: een drone cirkelt rond een auto, het landschap verandert van polder naar bergen" width="1600" height="900"></header>' +
 
       '<div class="vp-builder"><section class="vp-panel" aria-label="Instellingen">' +
       '<div class="vp-mode" role="group" aria-label="Wat wil je doen?">' +
@@ -154,15 +182,17 @@
 
       // bewerken
       '<div data-id="editFields">' +
-      '<div class="vp-field"><label class="vp-lbl" for="vp-editAction">' + dot('act') + 'Wat wil je doen?</label><select id="vp-editAction">' + editOpts() + '</select></div>' +
+      '<fieldset class="vp-fs"><legend class="vp-lbl">' + dot('act') + 'Wat wil je doen?</legend><div class="vp-acts" role="group">' + editOpts(base) + '</div><input type="hidden" id="vp-editAction" value="replace"></fieldset>' +
+      '<div class="vp-field" data-f="custom"><label class="vp-lbl" for="vp-custom">' + dot('act') + 'Beschrijf wat er moet veranderen</label><textarea id="vp-custom" rows="3">make it look like the car is driving through a heavy thunderstorm at night, with lightning in the distance and rain on the road</textarea><p class="vp-hint">Schrijf het als een opdracht aan een editor. Liefst in het Engels.</p></div>' +
       '<div class="vp-field" data-f="what"><label class="vp-lbl" for="vp-what">' + dot('what') + '<span data-id="whatLbl"></span></label><input type="text" id="vp-what"></div>' +
       '<div class="vp-field" data-f="to"><label class="vp-lbl" for="vp-to">' + dot('to') + '<span data-id="toLbl"></span></label><input type="text" id="vp-to"></div>' +
+      '<div class="vp-field"><label class="vp-lbl" for="vp-extra">' + dot('to') + 'Extra details <span class="vp-opt">optioneel</span></label><input type="text" id="vp-extra" placeholder="bv. the new car has the same color as the original"></div>' +
       '<fieldset class="vp-fs" data-f="keeps"><legend class="vp-lbl">' + dot('keep') + 'Wat moet hetzelfde blijven?</legend><div class="vp-keeps" data-id="keeps"></div></fieldset>' +
       '<p class="vp-hint">Tip: verander één ding per prompt. Wil je een andere auto én sneeuw? Doe dat in twee rondes.</p></div>' +
 
       // maken
       '<div data-id="makeFields" hidden>' +
-      '<label class="vp-check"><input type="checkbox" id="vp-i2v"><span>Ik begin met een foto of afbeelding<br><span class="vp-hint" style="margin:0">Dan beschrijf je alleen beweging en camera. De rest ziet het model al.</span></span></label>' +
+      '<label class="vp-check"><input type="checkbox" id="vp-i2v"><span>Ik begin met een foto of afbeelding<br><span class="vp-hint" style="margin:0">Dan beschrijf je alleen beweging en camera. De rest ziet het model al. Nog geen startbeeld? Maak het eerst met een beeldmodel zoals Seedream of ChatGPT.</span></span></label>' +
       '<div class="vp-field" data-f="subject"><label class="vp-lbl" for="vp-subject">' + dot('subject') + 'Wie of wat zie je?</label><input type="text" id="vp-subject" value="a classic red convertible"></div>' +
       '<div class="vp-field"><label class="vp-lbl" for="vp-action">' + dot('action') + 'Wat gebeurt er?</label><input type="text" id="vp-action" value="drives along a winding coastal road"></div>' +
       '<div class="vp-field" data-f="setting"><label class="vp-lbl" for="vp-setting">' + dot('setting') + 'Waar?</label><input type="text" id="vp-setting" value="through the Dutch dunes on a sunny autumn day"></div>' +
@@ -179,14 +209,23 @@
       '<div class="vp-track" data-id="track" aria-hidden="true"></div><div class="vp-ruler" aria-hidden="true"></div>' +
       '<div class="vp-prompt" data-id="prompt"></div>' +
       '<button type="button" class="tk-btn tk-btn-y vp-copy" data-id="copy">Kopieer prompt</button>' +
-      '<div class="vp-tip" data-id="tip"></div></section></div>' +
+      '<div class="vp-tip" data-id="tip"></div>' +
+      '<p class="vp-after">Wil je dat je hele team zo met AI werkt? <a href="' + 'https://www.ed-gpt.nl/trainingen' + '">Bekijk de trainingen &rarr;</a></p></section></div>' +
+      '<section class="vp-demo"><h2>Zo zag het eruit in mijn video</h2>' +
+      '<p>Mijn eigen auto, gefilmd met een drone. Daarna liet ik AI de omgeving of de auto zelf vervangen. Links het origineel, daarnaast wat er van dezelfde opnames overbleef.</p>' +
+      '<div class="vp-frames">' +
+      '<figure class="vp-frame is-orig"><img src="' + base + 'img/still-origineel.webp" alt="Origineel: witte auto op een polderweg, gefilmd met een drone" loading="lazy" width="540" height="960"><figcaption><b>Origineel</b>Mijn eigen auto, gefilmd met een drone</figcaption></figure>' +
+      '<figure class="vp-frame"><img src="' + base + 'img/still-omgeving.webp" alt="Dezelfde auto op een bergweg langs een fjord" loading="lazy" width="540" height="960"><figcaption><b>Andere omgeving</b>Zelfde auto, ineens in de bergen</figcaption></figure>' +
+      '<figure class="vp-frame"><img src="' + base + 'img/still-pickup.webp" alt="Een blauwe pick-up op dezelfde polderweg, van bovenaf" loading="lazy" width="540" height="960"><figcaption><b>Iets vervangen</b>De auto wordt een pick-up</figcaption></figure>' +
+      '<figure class="vp-frame"><img src="' + base + 'img/still-vuilniswagen.webp" alt="Een vuilniswagen op dezelfde polderweg, van bovenaf" loading="lazy" width="540" height="960"><figcaption><b>Iets vervangen</b>Of gewoon een vuilniswagen</figcaption></figure>' +
+      '</div></section>' +
 
       '<section class="vp-guide"><h2>Zo schrijf je een bewerk-prompt die werkt</h2>' +
       '<p>Een bewerkmodel ziet je hele video, maar weet niet wat jij eraan wilt veranderen. Een goede prompt geeft daarom antwoord op drie vragen.</p>' +
       '<div class="vp-steps">' +
-      '<div class="vp-step"><b>1 · Wat</b><h3>Wat verandert er?</h3><p>Noem het ding zoals je het in beeld ziet: <code>the car</code>, <code>the sky</code>, <code>the background</code>. Eén ding per prompt.</p></div>' +
-      '<div class="vp-step"><b>2 · Waarin</b><h3>Waarin verandert het?</h3><p>Hoe concreter, hoe beter. <code>a classic Volkswagen Beetle in pastel blue</code> geeft een veel voorspelbaarder resultaat dan <code>an old car</code>.</p></div>' +
-      '<div class="vp-step"><b>3 · Blijft</b><h3>Wat blijft hetzelfde?</h3><p>Camerabeweging, timing, de rest van het beeld. Die regel sla je snel over, en juist die houdt je shot heel.</p></div>' +
+      '<div class="vp-step"><img src="' + base + 'img/act-replace.webp" alt="" loading="lazy"><b>1 · Wat</b><h3>Wat verandert er?</h3><p>Noem het ding zoals je het in beeld ziet: <code>the car</code>, <code>the sky</code>, <code>the background</code>. Eén ding per prompt.</p></div>' +
+      '<div class="vp-step"><img src="' + base + 'img/act-restyle.webp" alt="" loading="lazy"><b>2 · Waarin</b><h3>Waarin verandert het?</h3><p>Hoe concreter, hoe beter. <code>a classic Volkswagen Beetle in pastel blue</code> geeft een veel voorspelbaarder resultaat dan <code>an old car</code>.</p></div>' +
+      '<div class="vp-step"><img src="' + base + 'img/act-angle.webp" alt="" loading="lazy"><b>3 · Blijft</b><h3>Wat blijft hetzelfde?</h3><p>Camerabeweging, timing, de rest van het beeld. Die regel sla je snel over, en juist die houdt je shot heel.</p></div>' +
       '</div>' +
       '<div class="vp-callout"><strong>Filmen voor AI? Houd het shot rustig.</strong>Een rustige, vloeiende camerabeweging is voor een model makkelijker te volgen. Snelle, wilde bewegingen geven vaker flikkering en rare overgangen. Eén rustig rondje met de drone is dus een prima start.</div>' +
       '<h2>Een nieuw shot? Dit zijn de bouwstenen</h2>' +
@@ -202,7 +241,7 @@
   }
 
   window.EDGPT_TOOLKIT_MODULES['video-prompts'] = function (root, goodie, api) {
-    root.innerHTML = html();
+    root.innerHTML = html(api.base);
     var q = function (sel) { return root.querySelector(sel); };
     var $ = function (id) { return root.querySelector('[data-id="' + id + '"]') || root.querySelector('#vp-' + id); };
     var state = { mode: 'edit', model: { edit: 'aleph', make: 'veo' }, text: '' };
@@ -279,7 +318,12 @@
         return KEEPS.filter(function (k) { return k[0] === i.value; })[0][2];
       });
       var o;
-      if (m === 'kling') {
+      if (a === 'custom') {
+        var C = v('custom').replace(/[.\s]+$/, '') || '...';
+        o = m === 'kling' ? [seg(null, 'In @Video, '), seg('act', C)]
+          : m === 'seedance' ? [seg(null, 'Edit @Video 1: '), seg('act', C)]
+          : [seg('act', cap(C))];
+      } else if (m === 'kling') {
         o = {
           replace: [seg('act', 'Change '), seg('what', W), seg('act', ' in @Video to '), seg('to', T)],
           env: [seg('act', 'Change the background in @Video to '), seg('to', T)],
@@ -302,7 +346,10 @@
           angle: [seg('act', 'Show the same scene from '), seg('to', T)]
         }[a];
       }
+      if (m === 'seedance' && a !== 'custom') o = [seg(null, 'Edit @Video 1: ')].concat(o.map(function (x, i) { return i === 0 ? seg(x.k, x.t.charAt(0).toLowerCase() + x.t.slice(1)) : x; }));
       o = o.concat([seg(null, '. ')]);
+      var X = v('extra').replace(/[.\s]+$/, '');
+      if (X) o = o.concat([seg('to', cap(X)), seg(null, '. ')]);
       if (m === 'omni') return o.concat([seg('keep', 'Keep everything else the same.')]);
       if (keeps.length) o = o.concat([seg(null, 'Keep '), seg('keep', listJoin(keeps)), seg(null, ' unchanged.')]);
       return o;
@@ -314,6 +361,7 @@
       var e = EDIT[$('editAction').value];
       q('[data-f="what"]').hidden = !e.what;
       q('[data-f="to"]').hidden = !e.to;
+      q('[data-f="custom"]').hidden = !e.custom;
       q('[data-f="keeps"]').hidden = (m === 'omni');
       if (e.what) $('whatLbl').textContent = e.what;
       if (e.to) $('toLbl').textContent = e.to;
@@ -354,7 +402,14 @@
         renderModels(); update();
       };
     });
-    $('editAction').addEventListener('change', function () { applyEditDefaults(); update(); });
+    [].forEach.call(root.querySelectorAll('.vp-act'), function (b) {
+      b.onclick = function () {
+        [].forEach.call(root.querySelectorAll('.vp-act'), function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+        $('editAction').value = b.getAttribute('data-act');
+        applyEditDefaults(); update();
+        if (b.getAttribute('data-act') === 'custom') $('custom').focus();
+      };
+    });
     q('.vp-panel').addEventListener('input', update);
     q('.vp-panel').addEventListener('change', update);
 

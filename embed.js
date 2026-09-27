@@ -11,7 +11,7 @@
 
   var script = document.currentScript || document.querySelector('script[src*="toolkit/embed.js"]');
   var BASE = script.src.replace(/[^\/]*(\?.*)?$/, '');
-  var BUST = Math.floor(Date.now() / 300000); // registry en modules max 5 minuten oud
+  var BUST = /[?&]tkdev/.test(location.search) ? Date.now() : Math.floor(Date.now() / 300000); // max 5 min oud; ?tkdev = altijd vers
   var SITE = 'https://www.ed-gpt.nl';
   var LINKS = {
     toolkit: SITE + '/tools',
@@ -90,7 +90,7 @@
     return data.goodies.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; })[0];
   }
   function card(g) {
-    return '<a class="tk-card" href="' + goodieHref(g) + '"><span class="tk-pill">' + esc(g.type) + '</span>' +
+    return '<a class="tk-card" href="' + goodieHref(g) + '">' + (g.icon ? '<img class="tk-card-icon" src="' + BASE + g.icon + '" alt="" width="160" height="160" loading="lazy">' : '') + '<span class="tk-pill">' + esc(g.type) + '</span>' +
       '<h3>' + esc(g.title) + '</h3><p>' + esc(g.line) + '</p>' + fromLine(g) + '<span class="tk-go">' + esc(cta(g)) + ' &rarr;</span></a>';
   }
   function renderOverview(root, data) {
@@ -104,7 +104,7 @@
         '<span class="tk-pill is-new">Nieuw · ' + esc(top.type) + '</span>' +
         '<h2>' + esc(top.title) + '</h2><p>' + esc(top.line) + '</p>' + fromLine(top) +
         '<a class="tk-btn tk-btn-ink" href="' + goodieHref(top) + '">' + esc(cta(top)) + '</a>' +
-        '</div><div class="tk-feature-art" aria-hidden="true">' + (top.art || '') + '</div></article>';
+        '</div><div class="tk-feature-art' + (top.image ? ' has-image' : '') + '" aria-hidden="true">' + (top.image ? '<img src="' + BASE + top.image + '" alt="">' : (top.art || '')) + '</div></article>';
     }
     GROUPS.forEach(function (gr) {
       var items = data.goodies.filter(function (g) { return (g.group || 'video') === gr.id && g !== top; });
@@ -173,6 +173,7 @@
       '<p class="tk-sub">' + esc(p.tagline || '') + '</p><div class="tk-linklist">';
     if (top) {
       h += '<a class="tk-link is-featured" href="' + goodieHref(top, true) + '">' +
+        (top.icon ? '<img class="tk-link-icon" src="' + BASE + top.icon + '" alt="" width="160" height="160">' : '') +
         '<span class="tk-pill">Uit mijn nieuwste video</span><span class="tk-t">' + esc(top.title) + '</span>' +
         '<small>' + esc(top.short || top.line) + '</small></a>';
     }
