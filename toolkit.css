@@ -1,0 +1,116 @@
+/* EdGPT Toolkit: alles scoped onder .edtk, zodat het Squarespace-thema en edv2 niet geraakt worden. */
+.edtk{
+  --cream:#FAF7F1;--paper:#F2EEE4;--white:#FFFFFF;--ink:#1A1A1A;--ink70:#4A4A4A;--ink50:#7A7A7A;
+  --purple:#9923E9;--purple-dark:#6E13B0;--purple-tint:#F5E6FD;--purple-soft:#C98CF5;
+  --blue:#5123EB;--blue-tint:#E7E2FE;--yellow:#FFD02F;--yellow-hover:#F5C512;--yellow-tint:#FFF4CC;
+  --line:rgba(26,26,26,.10);--line-strong:rgba(26,26,26,.22);
+  --head:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Raleway",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* bouwstenen van een prompt: merkkleuren plus lichte varianten, alleen als detail op de donkere monitor */
+  --k-subject:#C98CF5;--k-action:#FFD02F;--k-setting:#8F7BFF;--k-camera:#FFE58A;--k-light:#E7B8FF;--k-style:#B9ADFF;--k-audio:#D8D2C4;
+  --k-act:#FFD02F;--k-what:#C98CF5;--k-to:#8F7BFF;--k-keep:#D8D2C4;
+  font-family:var(--body);color:var(--ink);background:var(--cream);font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  border-radius:24px;overflow:hidden;text-align:left;
+}
+.edtk *,.edtk *::before,.edtk *::after{box-sizing:border-box}
+.edtk a{color:inherit;text-decoration:none}
+.edtk p{margin:0 0 1em}
+.edtk p:last-child{margin-bottom:0}
+.edtk h1,.edtk h2,.edtk h3{font-family:var(--head);font-weight:700;letter-spacing:-.025em;line-height:1.04;margin:0;color:inherit}
+.edtk button{font-family:inherit}
+.edtk [hidden]{display:none !important}
+.edtk :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:6px}
+.edtk .tk-wrap{padding:clamp(28px,5vw,64px) clamp(18px,4.5vw,56px)}
+.edtk .tk-eyebrow{font:600 12px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--purple);margin:0 0 16px;display:block}
+.edtk .tk-lede{font-size:clamp(17px,1.6vw,19px);color:var(--ink70);max-width:58ch}
+.edtk .tk-muted{color:var(--ink70)}
+
+/* knoppen, gelijk aan edv2 op de live site */
+.edtk .tk-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;padding:15px 26px;font:700 15px/1.15 var(--body);border:1.5px solid transparent;cursor:pointer;text-align:center;white-space:nowrap}
+.edtk .tk-btn-y{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+.edtk .tk-btn-y:hover{background:var(--yellow-hover);border-color:var(--yellow-hover)}
+.edtk .tk-btn-ink{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.edtk .tk-btn-ink:hover{background:#000}
+.edtk .tk-btn-line{background:transparent;color:var(--ink);border-color:var(--ink)}
+.edtk .tk-btn-line:hover{background:var(--ink);color:var(--cream)}
+.edtk .tk-btn-ghost{background:transparent;color:inherit;border-color:rgba(250,247,241,.32)}
+.edtk .tk-btn-ghost:hover{border-color:var(--cream)}
+.edtk .tk-btns{display:flex;flex-wrap:wrap;gap:12px}
+.edtk .tk-pill{display:inline-flex;align-items:center;gap:6px;font:600 11px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;padding:7px 11px;border-radius:999px;background:var(--purple-tint);color:var(--purple-dark)}
+.edtk .tk-pill.is-new{background:var(--yellow);color:var(--ink)}
+
+/* ---------- toolkit-overzicht ---------- */
+.edtk .tk-hero{max-width:820px;margin-bottom:clamp(32px,5vw,56px)}
+.edtk .tk-hero h1{font-size:clamp(40px,6.4vw,76px);margin-bottom:20px}
+.edtk .tk-feature{display:grid;grid-template-columns:1fr;background:var(--white);border:1px solid var(--line);border-radius:22px;overflow:hidden}
+@media(min-width:860px){.edtk .tk-feature{grid-template-columns:1.1fr 1fr}}
+.edtk .tk-feature-body{padding:clamp(24px,3.4vw,44px);display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.edtk .tk-feature-body h2{font-size:clamp(30px,3.8vw,46px)}
+.edtk .tk-feature-body p{color:var(--ink70);margin:0;max-width:52ch}
+.edtk .tk-feature-from{font-size:14.5px;color:var(--ink50)}
+.edtk .tk-feature-art{background:var(--ink);min-height:220px;display:flex;align-items:center;justify-content:center;padding:28px}
+.edtk .tk-art-prompt{font:15px/1.8 var(--mono);color:var(--cream);max-width:420px}
+.edtk .tk-art-prompt span{border-bottom:2px solid var(--kc);background:color-mix(in srgb,var(--kc) 18%,transparent);border-radius:3px;padding:1px 2px}
+.edtk .tk-section-title{font-size:clamp(24px,2.6vw,32px);margin:clamp(40px,6vw,64px) 0 18px}
+.edtk .tk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.edtk .tk-card{display:flex;flex-direction:column;gap:10px;background:var(--white);border:1px solid var(--line);border-radius:18px;padding:22px;transition:border-color .15s}
+.edtk .tk-card:hover{border-color:var(--ink)}
+.edtk .tk-card h3{font-size:21px}
+.edtk .tk-card p{font-size:15.5px;color:var(--ink70);margin:0}
+.edtk .tk-card .tk-feature-from{font-size:14px}
+.edtk .tk-follow{margin-top:28px;padding:18px 20px;border-radius:16px;background:var(--paper);font-size:15.5px;color:var(--ink70)}
+.edtk .tk-follow a{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--purple);text-underline-offset:3px}
+
+/* brug naar training */
+.edtk .tk-bridge{margin-top:clamp(40px,6vw,72px);background:var(--ink);color:var(--cream);border-radius:22px;padding:clamp(28px,4vw,48px);display:grid;gap:22px}
+@media(min-width:860px){.edtk .tk-bridge{grid-template-columns:1.3fr 1fr;align-items:end}}
+.edtk .tk-bridge h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:12px}
+.edtk .tk-bridge p{color:rgba(230,226,216,.8);margin:0;max-width:52ch}
+.edtk .tk-bridge .tk-btns{justify-content:flex-start}
+@media(min-width:860px){.edtk .tk-bridge .tk-btns{justify-content:flex-end}}
+
+/* codeblok over de volle breedte van de Squarespace fluid engine (zelfde aanpak als de oude /tools-pagina) */
+.fluid-engine:has(.edgpt-toolkit){grid-template-rows:repeat(8,minmax(0,auto))!important;row-gap:0!important}
+.fluid-engine:has(.edgpt-toolkit) .fe-block:has(.edgpt-toolkit){grid-row:1/-1!important;grid-column:1/-1!important}
+.edtk .tk-go{margin-top:auto;padding-top:6px;font:700 15px var(--body);color:var(--ink)}
+.edtk .tk-privacy{margin-top:22px;font-size:14px;color:var(--ink50)}
+.edtk .tk-privacy a{text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- goodie-weergave ---------- */
+.edtk .tk-wrap-top{padding-bottom:0}
+.edtk .tk-wrap-mid{padding-top:0;padding-bottom:0}
+.edtk .tk-wrap-bottom{padding-top:0}
+.edtk .tk-wrap-bottom .tk-bridge{margin-top:clamp(32px,5vw,56px)}
+.edtk .tk-back{display:inline-flex;align-items:center;gap:8px;font:600 14.5px var(--body);color:var(--ink70);margin-bottom:28px}
+.edtk .tk-back:hover{color:var(--ink)}
+.edtk .tk-updated{font-size:14px;color:var(--ink50);margin-top:28px}
+
+/* ---------- link in bio ---------- */
+.edtk.tk-links{max-width:520px;margin:0 auto;border-radius:0;background:var(--cream)}
+.edtk .tk-links-in{padding:40px 18px 48px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.edtk .tk-avatar{width:104px;height:104px;border-radius:50%;object-fit:cover;object-position:50% 8%;background:var(--purple);border:3px solid var(--white);box-shadow:0 0 0 1px var(--line)}
+.edtk .tk-links-in h1{font-size:28px;margin:16px 0 6px}
+.edtk .tk-links-in .tk-sub{font-size:15.5px;color:var(--ink70);margin:0 0 26px;max-width:36ch}
+.edtk .tk-linklist{display:flex;flex-direction:column;gap:12px;width:100%}
+.edtk .tk-link{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;padding:17px 20px;border-radius:18px;background:var(--white);border:1.5px solid var(--ink);font:700 16px/1.25 var(--body);text-align:left}
+.edtk .tk-link:hover{background:var(--ink);color:var(--cream)}
+.edtk .tk-link small{display:block;font:500 13.5px/1.35 var(--body);color:var(--ink70);margin-top:3px}
+.edtk .tk-link:hover small{color:rgba(230,226,216,.8)}
+.edtk .tk-link .tk-arr{flex:none;font:500 18px var(--body)}
+.edtk .tk-link.is-featured{background:var(--yellow);border-color:var(--yellow);flex-direction:column;align-items:flex-start;gap:8px;padding:20px}
+.edtk .tk-link.is-featured:hover{background:var(--yellow-hover);color:var(--ink)}
+.edtk .tk-link.is-featured .tk-pill{background:var(--ink);color:var(--yellow)}
+.edtk .tk-link.is-featured span.tk-t{font:700 21px/1.15 var(--head);letter-spacing:-.02em}
+.edtk .tk-link.is-featured small{color:rgba(26,26,26,.75)}
+.edtk .tk-socials{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.edtk .tk-socials a{font:600 14px var(--body);padding:9px 15px;border-radius:999px;border:1px solid var(--line-strong)}
+.edtk .tk-socials a:hover{border-color:var(--ink)}
+.edtk .tk-links-foot{margin-top:26px;font-size:13px;color:var(--ink50)}
+.edtk .tk-links-foot a{text-decoration:underline;text-underline-offset:3px}
+
+/* laadtoestand */
+.edtk .tk-loading{padding:48px 24px;color:var(--ink50);font-size:15px}
+
+@media (prefers-reduced-motion: reduce){.edtk *{transition:none !important}}
