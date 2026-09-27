@@ -72,9 +72,9 @@
 
   /* Referenties: rollen per type en hoe elk model ernaar verwijst (zie referenties-check.md). */
   var REF_ROLES = {
-    image: [['subject', 'Onderwerp of product'], ['style', 'Stijl of look'], ['setting', 'Omgeving'], ['start', 'Startbeeld'], ['end', 'Eindbeeld']],
-    video: [['motion', 'Beweging overnemen'], ['camera', 'Camerabeweging overnemen'], ['style', 'Stijl of look']],
-    audio: [['music', 'Muziek'], ['voice', 'Stem of voice-over'], ['sfx', 'Geluidseffecten']]
+    image: [['subject', 'Onderwerp'], ['style', 'Stijl'], ['setting', 'Omgeving'], ['start', 'Startbeeld'], ['end', 'Eindbeeld']],
+    video: [['motion', 'Beweging'], ['camera', 'Camerabeweging'], ['style', 'Stijl']],
+    audio: [['music', 'Muziek'], ['voice', 'Voice-over'], ['sfx', 'Geluidseffecten']]
   };
   var REF_LABEL = { image: 'Beeld', video: 'Video', audio: 'Audio' };
   var REF_WORD = { image: 'image', video: 'video', audio: 'audio' };
@@ -116,7 +116,7 @@
     '.vp-demo{margin-top:clamp(48px,7vw,80px)}' +
     '.vp-demo h2{font-size:clamp(28px,3.6vw,44px);margin-bottom:10px}' +
     '.vp-demo>p{color:var(--ink70);max-width:60ch;margin-bottom:24px}' +
-    '.vp-frames{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(150px,1fr);gap:14px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory}' +
+    '.vp-frames{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(140px,190px);justify-content:start;gap:14px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory}' +
     '.vp-frame{margin:0;scroll-snap-align:start}' +
     '.vp-frame img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:16px;display:block;background:var(--paper)}' +
     '.vp-frame figcaption{font-size:14px;color:var(--ink70);margin-top:8px;line-height:1.4}' +
