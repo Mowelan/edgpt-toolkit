@@ -68,7 +68,22 @@
     angle: { lbl: 'Nieuwe camerahoek', what: null, to: 'Welke camerahoek?', w: '', t: 'a low angle close to the road', keep: ['subject', 'bg'] },
     custom: { lbl: 'Eigen opdracht', what: null, to: null, custom: true, w: '', t: '', keep: ['camera', 'timing'] }
   };
-  var NAMES = { subject: 'Onderwerp', action: 'Actie', setting: 'Plek', camera: 'Camera', light: 'Licht', style: 'Stijl', audio: 'Geluid', act: 'Opdracht', what: 'Wat', to: 'Wordt', keep: 'Blijft' };
+  var NAMES = { ref: 'Referentie', subject: 'Onderwerp', action: 'Actie', setting: 'Plek', camera: 'Camera', light: 'Licht', style: 'Stijl', audio: 'Geluid', act: 'Opdracht', what: 'Wat', to: 'Wordt', keep: 'Blijft' };
+
+  /* Referenties: rollen per type en hoe elk model ernaar verwijst (zie referenties-check.md). */
+  var REF_ROLES = {
+    image: [['subject', 'Onderwerp of product'], ['style', 'Stijl of look'], ['setting', 'Omgeving'], ['start', 'Startbeeld'], ['end', 'Eindbeeld']],
+    video: [['motion', 'Beweging overnemen'], ['camera', 'Camerabeweging overnemen'], ['style', 'Stijl of look']],
+    audio: [['music', 'Muziek'], ['voice', 'Stem of voice-over'], ['sfx', 'Geluidseffecten']]
+  };
+  var REF_LABEL = { image: 'Beeld', video: 'Video', audio: 'Audio' };
+  var REF_WORD = { image: 'image', video: 'video', audio: 'audio' };
+  var REF_STYLE = {
+    // standaard: neutrale verwijzing, werkt in elk model dat bijlagen leest
+    general: { name: function (t, n) { return 'reference ' + REF_WORD[t] + ' ' + n; } },
+    seedance: { name: function (t, n) { return '@' + REF_LABEL[t].replace('Beeld', 'Image') + ' ' + n; }, editVideoOffset: 1 }
+  };
+  function refStyle(m) { return REF_STYLE[m] || REF_STYLE.general; }
 
   function opts(obj, def) {
     return Object.keys(obj).map(function (k) {
@@ -107,6 +122,31 @@
     '.vp-frame figcaption{font-size:14px;color:var(--ink70);margin-top:8px;line-height:1.4}' +
     '.vp-frame figcaption b{display:block;color:var(--ink);font-family:var(--head);font-size:16px}' +
     '.vp-frame.is-orig img{box-shadow:0 0 0 3px var(--ink)}' +
+    '.vp-more,.vp-why{margin:0 0 16px}' +
+    '.vp-more summary,.vp-why summary{cursor:pointer;font:600 14.5px var(--body);color:var(--ink70);list-style:none}' +
+    '.vp-more summary::-webkit-details-marker,.vp-why summary::-webkit-details-marker,.vp-more-guide summary::-webkit-details-marker{display:none}' +
+    '.vp-more summary:hover,.vp-why summary:hover{color:var(--ink)}' +
+    '.vp-more .vp-field{margin:10px 0 0}' +
+    '.vp-why summary::before{content:"? ";display:inline-block;width:20px;height:20px;border-radius:50%;background:var(--paper);text-align:center;line-height:20px;margin-right:6px;font-size:12px}' +
+    '.vp-why p{font-size:14.5px;color:var(--ink70);margin:10px 0 0}' +
+    '.vp-more-guide{margin-top:8px;border-top:1px solid var(--line);padding-top:18px}' +
+    '.vp-more-guide summary{cursor:pointer;list-style:none;font:700 clamp(20px,2.2vw,26px)/1.2 var(--head);letter-spacing:-.02em}' +
+    '.vp-more-guide summary::after{content:" +";color:var(--purple)}' +
+    '.vp-more-guide[open] summary::after{content:" \\2212"}' +
+    '.vp-more-guide .vp-parts{margin-top:18px}' +
+    '.vp-refs{border:1.5px dashed var(--line-strong);border-radius:14px;padding:12px 14px;margin:0 0 16px}' +
+    '.vp-refs-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}' +
+    '.vp-refs-head .vp-lbl{margin:0;font-size:14.5px}' +
+    '.vp-refs-add{display:flex;gap:6px}' +
+    '.vp-refs-add button{font:600 13.5px var(--body);border:1.5px solid var(--line-strong);background:var(--white);border-radius:999px;padding:6px 11px;cursor:pointer}' +
+    '.vp-refs-add button:hover{border-color:var(--ink)}' +
+    '.vp-ref{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin-top:10px}' +
+    '.vp-ref .vp-ref-tag{font:700 12px var(--mono);background:var(--paper);border-radius:8px;padding:6px 8px;white-space:nowrap}' +
+    '.vp-ref-fields{display:grid;grid-template-columns:1fr;gap:6px}' +
+    '@media(min-width:520px){.vp-ref-fields{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}}' +
+    '.vp-ref select,.vp-ref input{width:100%;font:14.5px var(--body);color:var(--ink);background:var(--cream);border:1.5px solid var(--line);border-radius:10px;padding:8px 10px}' +
+    '.vp-ref-x{border:0;background:none;font-size:20px;line-height:1;color:var(--ink50);cursor:pointer;padding:4px}' +
+    '.vp-ref-x:hover{color:var(--ink)}' +
     '.vp-step img{width:72px;height:72px;border-radius:12px;margin-bottom:12px;display:block}' +
     '.vp-builder{display:grid;grid-template-columns:1fr;gap:18px}' +
     '@media(min-width:940px){.vp-builder{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);align-items:start}}' +
@@ -186,9 +226,9 @@
       '<div class="vp-field" data-f="custom"><label class="vp-lbl" for="vp-custom">' + dot('act') + 'Beschrijf wat er moet veranderen</label><textarea id="vp-custom" rows="3">make it look like the car is driving through a heavy thunderstorm at night, with lightning in the distance and rain on the road</textarea><p class="vp-hint">Schrijf het als een opdracht aan een editor. Liefst in het Engels.</p></div>' +
       '<div class="vp-field" data-f="what"><label class="vp-lbl" for="vp-what">' + dot('what') + '<span data-id="whatLbl"></span></label><input type="text" id="vp-what"></div>' +
       '<div class="vp-field" data-f="to"><label class="vp-lbl" for="vp-to">' + dot('to') + '<span data-id="toLbl"></span></label><input type="text" id="vp-to"></div>' +
-      '<div class="vp-field"><label class="vp-lbl" for="vp-extra">' + dot('to') + 'Extra details <span class="vp-opt">optioneel</span></label><input type="text" id="vp-extra" placeholder="bv. the new car has the same color as the original"></div>' +
+      '<details class="vp-more"><summary>+ Extra details</summary><div class="vp-field"><input type="text" id="vp-extra" aria-label="Extra details" placeholder="bv. the new car has the same color as the original"></div></details>' +
       '<fieldset class="vp-fs" data-f="keeps"><legend class="vp-lbl">' + dot('keep') + 'Wat moet hetzelfde blijven?</legend><div class="vp-keeps" data-id="keeps"></div></fieldset>' +
-      '<p class="vp-hint">Tip: verander één ding per prompt. Wil je een andere auto én sneeuw? Doe dat in twee rondes.</p></div>' +
+      '<p class="vp-hint">Tip: één wijziging per prompt werkt het best. Andere auto én sneeuw? Doe het in twee rondes.</p></div>' +
 
       // maken
       '<div data-id="makeFields" hidden>' +
@@ -201,7 +241,10 @@
       '<div class="vp-field" data-f="style"><label class="vp-lbl" for="vp-style">' + dot('style') + 'Stijl</label><select id="vp-style">' + opts(STYLE, 'cinematic') + '</select></div>' +
       '<div class="vp-field"><label class="vp-lbl" for="vp-audio">' + dot('audio') + 'Wat hoor je?</label><input type="text" id="vp-audio" value="engine hum, wind and distant seagulls"></div>' +
       '</div>' +
-      '<p class="vp-hint">Schrijf in het Engels. De officiële promptgidsen van al deze modellen doen dat ook.</p>' +
+      '<div class="vp-refs"><div class="vp-refs-head"><span class="vp-lbl">' + dot('ref') + 'Stuur je ook beeld, video of audio mee?</span>' +
+      '<div class="vp-refs-add"><button type="button" data-add="image">+ Beeld</button><button type="button" data-add="video">+ Video</button><button type="button" data-add="audio">+ Audio</button></div></div>' +
+      '<div data-id="refs"></div><p class="vp-hint" data-id="refhint" hidden></p></div>' +
+      '<details class="vp-why"><summary>Waarom schrijf je de prompt in het Engels?</summary><p>Nederlands werkt vaak ook, maar Engels is voorspelbaarder. De officiële promptgidsen van deze modellen zijn Engelstalig, en vaktermen als <code>orbit</code>, <code>push-in</code> of <code>golden hour</code> pakken ze in het Engels het best op. Denk je liever in het Nederlands? Typ je idee en laat ChatGPT of Claude het vertalen.</p></details>' +
       '</section>' +
 
       '<section class="vp-monitor" aria-live="polite" aria-label="Jouw prompt">' +
@@ -227,8 +270,8 @@
       '<div class="vp-step"><img src="' + base + 'img/act-restyle.webp" alt="" loading="lazy"><b>2 · Waarin</b><h3>Waarin verandert het?</h3><p>Hoe concreter, hoe beter. <code>a classic Volkswagen Beetle in pastel blue</code> geeft een veel voorspelbaarder resultaat dan <code>an old car</code>.</p></div>' +
       '<div class="vp-step"><img src="' + base + 'img/act-angle.webp" alt="" loading="lazy"><b>3 · Blijft</b><h3>Wat blijft hetzelfde?</h3><p>Camerabeweging, timing, de rest van het beeld. Die regel sla je snel over, en juist die houdt je shot heel.</p></div>' +
       '</div>' +
-      '<div class="vp-callout"><strong>Filmen voor AI? Houd het shot rustig.</strong>Een rustige, vloeiende camerabeweging is voor een model makkelijker te volgen. Snelle, wilde bewegingen geven vaker flikkering en rare overgangen. Eén rustig rondje met de drone is dus een prima start.</div>' +
-      '<h2>Een nieuw shot? Dit zijn de bouwstenen</h2>' +
+      '<div class="vp-callout"><strong>Filmen voor AI? Houd het shot rustig.</strong>Snelle, wilde camerabewegingen geven vaker flikkering. Eén rustig rondje met de drone is een prima start.</div>' +
+      '<details class="vp-more-guide"><summary>Een nieuw shot maken? Dit zijn de bouwstenen</summary>' +
       '<p>Hoe meer van deze bouwstenen je invult, hoe minder je hoeft te gokken en opnieuw te genereren. De kleuren zijn dezelfde als in je prompt hierboven.</p>' +
       '<div class="vp-parts">' +
       '<div class="vp-part"><h3>' + dot('subject') + 'Onderwerp</h3><p>Wie of wat is de hoofdrol? <code>a man in a yellow raincoat</code> werkt beter dan <code>a person</code>.</p></div>' +
@@ -237,14 +280,14 @@
       '<div class="vp-part"><h3>' + dot('camera') + 'Camera</h3><p>Hoe beweegt de camera? Een drone-orbit of een langzame push-in bepaalt hoe professioneel je shot oogt.</p></div>' +
       '<div class="vp-part"><h3>' + dot('light') + 'Licht</h3><p>Golden hour, mist of neon. Licht bepaalt de sfeer meer dan je denkt.</p></div>' +
       '<div class="vp-part"><h3>' + dot('style') + 'Stijl en geluid</h3><p>Film, commercial of smartphone-look. De meeste modellen maken nu ook geluid, dus beschrijf wat je hoort.</p></div>' +
-      '</div></section>';
+      '</div></details></section>';
   }
 
   window.EDGPT_TOOLKIT_MODULES['video-prompts'] = function (root, goodie, api) {
     root.innerHTML = html(api.base);
     var q = function (sel) { return root.querySelector(sel); };
     var $ = function (id) { return root.querySelector('[data-id="' + id + '"]') || root.querySelector('#vp-' + id); };
-    var state = { mode: 'edit', model: { edit: 'aleph', make: 'veo' }, text: '' };
+    var state = { mode: 'edit', model: { edit: 'aleph', make: 'kling' }, text: '', refs: [] };
 
     $('keeps').innerHTML = KEEPS.map(function (k) {
       return '<label><input type="checkbox" value="' + k[0] + '"> ' + k[1] + '</label>';
@@ -308,8 +351,45 @@
           o = o.concat(sentence(main), sentence([['camera', C]]), sentence([['light', L], ['style', Y, ', ']]), labeled('audio', sound, U));
         }
       }
+      o = o.concat(refSegs('make', m));
       if (m === 'omni') o.push(seg(null, 'Single unbroken scene.'));
       return o;
+    }
+
+    function refSegs(mode, m) {
+      var st = refStyle(m), count = { image: 0, video: 0, audio: 0 }, o = [];
+      state.refs.forEach(function (r) {
+        count[r.type]++;
+        var n = count[r.type] + (r.type === 'video' && mode === 'edit' && st.editVideoOffset ? st.editVideoOffset : 0);
+        var R = st.name(r.type, n), D = (r.desc || '').trim().replace(/[.\s]+$/, '');
+        var p = {
+          'image:subject': ['Use ', ' as the reference for the main subject'],
+          'image:style': ['Match the visual style of ', ''],
+          'image:setting': ['Use ', ' as the reference for the environment'],
+          'image:start': ['Start from ', ' as the first frame'],
+          'image:end': ['End on ', ' as the last frame'],
+          'video:motion': ['Copy the motion and timing of ', ''],
+          'video:camera': ['Follow the camera movement of ', ''],
+          'video:style': ['Match the look of ', ''],
+          'audio:music': ['Use ', ' as the music'],
+          'audio:voice': ['Use ', ' as the voice-over'],
+          'audio:sfx': ['Use ', ' for the sound effects']
+        }[r.type + ':' + r.role];
+        o.push(seg(null, p[0]), seg('ref', R + (D ? ' (' + D + ')' : '')), seg(null, p[1] + '. '));
+      });
+      return o;
+    }
+
+    function renderRefs() {
+      var box = $('refs');
+      box.innerHTML = state.refs.map(function (r, i) {
+        return '<div class="vp-ref" data-i="' + i + '"><span class="vp-ref-tag">' + REF_LABEL[r.type] + '</span><div class="vp-ref-fields">' +
+          '<select aria-label="Waarvoor gebruik je deze ' + REF_LABEL[r.type].toLowerCase() + '?">' + REF_ROLES[r.type].map(function (x) {
+            return '<option value="' + x[0] + '"' + (x[0] === r.role ? ' selected' : '') + '>' + x[1] + '</option>';
+          }).join('') + '</select>' +
+          '<input type="text" aria-label="Wat staat erop?" placeholder="' + { image: 'bv. my car, a white SUV', video: 'bv. a slow drone orbit', audio: 'bv. upbeat synthwave' }[r.type] + '" value="' + api.esc(r.desc) + '"></div>' +
+          '<button type="button" class="vp-ref-x" aria-label="Verwijder">&times;</button></div>';
+      }).join('');
     }
 
     function buildEdit() {
@@ -350,6 +430,7 @@
       o = o.concat([seg(null, '. ')]);
       var X = v('extra').replace(/[.\s]+$/, '');
       if (X) o = o.concat([seg('to', cap(X)), seg(null, '. ')]);
+      o = o.concat(refSegs('edit', m));
       if (m === 'omni') return o.concat([seg('keep', 'Keep everything else the same.')]);
       if (keeps.length) o = o.concat([seg(null, 'Keep '), seg('keep', listJoin(keeps)), seg(null, ' unchanged.')]);
       return o;
@@ -409,6 +490,26 @@
         applyEditDefaults(); update();
         if (b.getAttribute('data-act') === 'custom') $('custom').focus();
       };
+    });
+    [].forEach.call(root.querySelectorAll('[data-add]'), function (b) {
+      b.onclick = function () {
+        var t = b.getAttribute('data-add');
+        state.refs.push({ type: t, role: REF_ROLES[t][0][0], desc: '' });
+        renderRefs(); update();
+        var rows = root.querySelectorAll('.vp-ref'); rows[rows.length - 1].querySelector('input').focus();
+      };
+    });
+    $('refs').addEventListener('input', function (e) {
+      var row = e.target.closest('.vp-ref'); if (!row) return;
+      var r = state.refs[+row.getAttribute('data-i')];
+      if (e.target.tagName === 'SELECT') r.role = e.target.value; else r.desc = e.target.value;
+    });
+    $('refs').addEventListener('change', function (e) {
+      var row = e.target.closest('.vp-ref'); if (row && e.target.tagName === 'SELECT') state.refs[+row.getAttribute('data-i')].role = e.target.value;
+    });
+    $('refs').addEventListener('click', function (e) {
+      if (!e.target.classList.contains('vp-ref-x')) return;
+      state.refs.splice(+e.target.closest('.vp-ref').getAttribute('data-i'), 1); renderRefs(); update();
     });
     q('.vp-panel').addEventListener('input', update);
     q('.vp-panel').addEventListener('change', update);

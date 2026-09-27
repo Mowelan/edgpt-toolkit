@@ -9,7 +9,7 @@
   --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   /* bouwstenen van een prompt: merkkleuren plus lichte varianten, alleen als detail op de donkere monitor */
   --k-subject:#C98CF5;--k-action:#FFD02F;--k-setting:#8F7BFF;--k-camera:#FFE58A;--k-light:#E7B8FF;--k-style:#B9ADFF;--k-audio:#D8D2C4;
-  --k-act:#FFD02F;--k-what:#C98CF5;--k-to:#8F7BFF;--k-keep:#D8D2C4;
+  --k-act:#FFD02F;--k-what:#C98CF5;--k-to:#8F7BFF;--k-keep:#D8D2C4;--k-ref:#9FE3C8;
   font-family:var(--body);color:var(--ink);background:var(--cream);font-size:17px;line-height:1.6;
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
   border-radius:24px;overflow:hidden;text-align:left;
