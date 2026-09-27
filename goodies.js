@@ -35,16 +35,16 @@ window.EDGPT_TOOLKIT = {
         '<span style="--kc:var(--k-act)">with</span> <span style="--kc:var(--k-to)">a classic Volkswagen Beetle in pastel blue</span>. ' +
         'Keep <span style="--kc:var(--k-keep)">the camera movement and the road</span> unchanged.</p>'
     },
-    /* Voor je team: overgenomen van de oude /tools-pagina (27-09-2026), modules via convert.py. */
-    { slug: 'keuzehulp', icon: 'img/tool-keuzehulp.webp', title: 'Model-keuzehulp', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
+    /* Voor je team: logica en teksten van de oude /tools-pagina, bediening vernieuwd in goodies/_teamtool.js (27-09-2026). */
+    { slug: 'keuzehulp', icon: 'img/tool-keuzehulp.webp', title: 'Model-keuzehulp', type: 'Tool', group: 'team', date: '2026-09-05',
       line: 'Acht vragen over je werk, je team en je data. Je krijgt een advies met uitleg per antwoord en een eerlijk nadeel.' },
-    { slug: 'promptbouwer', icon: 'img/tool-promptbouwer.webp', aliases: ['prompt'], title: 'Prompt-bouwer', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
+    { slug: 'promptbouwer', icon: 'img/tool-promptbouwer.webp', aliases: ['prompt'], title: 'Prompt-bouwer', type: 'Tool', group: 'team', date: '2026-09-05',
       line: 'Rol, taak, context, voorbeelden, format, toon en beperkingen. Je krijgt een prompt die je zo in ChatGPT, Claude, Copilot of Gemini plakt.' },
-    { slug: 'tijdwinst', icon: 'img/tool-tijdwinst.webp', title: 'Tijdwinstcalculator', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
+    { slug: 'tijdwinst', icon: 'img/tool-tijdwinst.webp', title: 'Tijdwinstcalculator', type: 'Tool', group: 'team', date: '2026-09-05',
       line: 'Teamgrootte, uren repetitief werk en uurtarief. Je ziet uren per maand en euro per jaar, afgezet tegen een dagdeel of een trainingsdag.' },
-    { slug: 'trainingskiezer', icon: 'img/tool-trainingskiezer.webp', title: 'Trainingskiezer', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
+    { slug: 'trainingskiezer', icon: 'img/tool-trainingskiezer.webp', title: 'Trainingskiezer', type: 'Tool', group: 'team', date: '2026-09-05',
       line: 'Vier vragen, zes trainingsvormen. Je krijgt de vorm die het beste past en een alternatief om mee te combineren.' },
-    { slug: 'ai-act', icon: 'img/tool-ai-act.webp', title: 'AI Act-check', type: 'Tool', group: 'team', fullBleed: true, date: '2026-09-05',
+    { slug: 'ai-act', icon: 'img/tool-ai-act.webp', title: 'AI Act-check', type: 'Tool', group: 'team', date: '2026-09-05',
       line: 'Zes vragen over gebruik, beleid, AI-geletterdheid en risico. Een oriëntatie op waar je staat, geen juridisch advies.' }
   ]
 };

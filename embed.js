@@ -161,27 +161,33 @@
   /* ---------- link in bio ---------- */
   function mountLinks(root, data) {
     root.classList.add('tk-links');
-    var top = data.goodies.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; })[0];
-    var p = data.profile || {};
-    function link(href, title, sub, ext) {
-      return '<a class="tk-link" href="' + href + '"' + (ext ? ' target="_blank" rel="noopener"' : '') + '><span>' + esc(title) +
-        (sub ? '<small>' + esc(sub) + '</small>' : '') + '</span><span class="tk-arr" aria-hidden="true">&rarr;</span></a>';
+    var list = data.goodies.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+    var top = list[0], p = data.profile || {};
+    function tile(href, icon, title, sub, ext) {
+      return '<a class="tk-tile" href="' + href + '"' + (ext ? ' target="_blank" rel="noopener"' : '') + '><img src="' + BASE + icon + '" alt="" width="160" height="160" loading="lazy">' +
+        '<span class="tk-tile-t">' + esc(title) + '</span><span class="tk-tile-s">' + esc(sub) + '</span></a>';
     }
     var h = '<div class="tk-links-in">' +
       (p.photo ? '<img class="tk-avatar" src="' + esc(p.photo) + '" alt="Ed van der Molen" width="104" height="104">' : '') +
-      '<h1>' + esc(p.name || 'Ed van der Molen') + '</h1>' +
-      '<p class="tk-sub">' + esc(p.tagline || '') + '</p><div class="tk-linklist">';
+      '<h1>' + esc(p.name || 'Ed van der Molen') + '</h1><p class="tk-sub">' + esc(p.tagline || '') + '</p>';
     if (top) {
-      h += '<a class="tk-link is-featured" href="' + goodieHref(top, true) + '">' +
-        (top.icon ? '<img class="tk-link-icon" src="' + BASE + top.icon + '" alt="" width="160" height="160">' : '') +
-        '<span class="tk-pill">Uit mijn nieuwste video</span><span class="tk-t">' + esc(top.title) + '</span>' +
-        '<small>' + esc(top.short || top.line) + '</small></a>';
+      h += '<a class="tk-hero-card" href="' + goodieHref(top, true) + '">' + (top.image ? '<img src="' + BASE + top.image + '" alt="" width="1600" height="900">' : '') +
+        '<span class="tk-hero-body"><span class="tk-pill is-new">Uit mijn nieuwste video</span><span class="tk-t">' + esc(top.title) + '</span>' +
+        '<span class="tk-hero-s">' + esc(top.short || top.line) + '</span><span class="tk-hero-go">' + esc(cta(top)) + ' &rarr;</span></span></a>';
     }
-    h += link(LINKS.toolkit, 'Gratis AI-tools', 'Prompt-bouwers, model-keuzehulp, tijdwinstcalculator en meer') +
-      link(LINKS.trainingen, 'AI-training voor je team', 'Praktisch, met jullie eigen werk als oefenmateriaal') +
-      link(LINKS.kennismaking, 'Plan een kennismaking', '30 minuten, gewoon even sparren', true) +
-      link(LINKS.blog, 'Blog', 'Wat ik test, en wat wel en niet werkt') +
-      '</div><div class="tk-socials">' +
+    h += '<div class="tk-tiles">' +
+      tile(LINKS.toolkit, 'img/tool-keuzehulp.webp', 'Gratis AI-tools', 'Prompts, keuzehulp, calculator') +
+      tile(LINKS.trainingen, 'img/tool-trainingskiezer.webp', 'AI-training', 'Voor je hele team') +
+      tile(LINKS.kennismaking, 'img/link-kennismaking.webp', 'Kennismaken', '30 minuten sparren', true) +
+      tile(LINKS.blog, 'img/link-blog.webp', 'Blog', 'Wat ik test en wat werkt') +
+      '</div>';
+    var tools = list.filter(function (g) { return g !== top && g.icon && !g.href; });
+    if (tools.length) {
+      h += '<p class="tk-strip-t">Meer gratis tools</p><div class="tk-strip">' + tools.map(function (g) {
+        return '<a href="' + goodieHref(g, true) + '"><img src="' + BASE + g.icon + '" alt="" width="160" height="160" loading="lazy"><span>' + esc(g.title) + '</span></a>';
+      }).join('') + '</div>';
+    }
+    h += '<div class="tk-socials">' +
       '<a href="' + LINKS.instagram + '" target="_blank" rel="noopener">Instagram</a>' +
       '<a href="' + LINKS.tiktok + '" target="_blank" rel="noopener">TikTok</a>' +
       '<a href="' + LINKS.linkedin + '" target="_blank" rel="noopener">LinkedIn</a>' +
@@ -189,7 +195,7 @@
     root.innerHTML = h;
     root.addEventListener('click', function (e) {
       var a = e.target.closest && e.target.closest('a');
-      if (a) track('linkinbio_click', { link: a.textContent.trim().slice(0, 60) });
+      if (a) track('linkinbio_click', { link: (a.querySelector('.tk-t,.tk-tile-t,span') || a).textContent.trim().slice(0, 60) });
     });
   }
 
