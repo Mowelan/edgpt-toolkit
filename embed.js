@@ -2,7 +2,7 @@
  * EdGPT Toolkit embed.
  * Squarespace-codeblok:  <div class="edgpt-toolkit" data-view="toolkit"></div>
  *                        <script src="https://mowelan.github.io/edgpt-toolkit/embed.js" defer></script>
- * data-view: "toolkit" (www.ed-gpt.nl/tools: overzicht + tools via #slug) of "links" (link in bio).
+ * data-view: "toolkit" (www.ed-gpt.nl/tools: overzicht + tools via #slug) of "linkinbio" (www.ed-gpt.nl/linkinbio; "links" werkt ook).
  * Nieuwe goodie = regel in goodies.js plus (bij een tool) goodies/{slug}.js. Squarespace blijft ongemoeid.
  */
 (function () {
@@ -20,7 +20,9 @@
     kennismaking: 'https://calendly.com/edvandermolen-info/30min',
     instagram: 'https://www.instagram.com/edgpt_nl/',
     tiktok: 'https://www.tiktok.com/@ed_gpt',
-    linkedin: 'https://www.linkedin.com/in/edvandermolen/'
+    linkedin: 'https://www.linkedin.com/in/edvandermolen/',
+    portfolio: SITE + '/portfolio',
+    contact: SITE + '/contact'
   };
   window.EDGPT_TOOLKIT_MODULES = window.EDGPT_TOOLKIT_MODULES || {};
 
@@ -158,44 +160,92 @@
     route(!!location.hash);
   }
 
-  /* ---------- link in bio ---------- */
+  /* ---------- link in bio (www.ed-gpt.nl/linkinbio): nieuwste goodie, dan twee sporen ---------- */
+  var ICON = {
+    instagram: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4ZM17.3 5.5a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4ZM12 3.8c2.7 0 3 0 4 .1 2.7.1 4 1.4 4.1 4.1v8c-.1 2.7-1.4 4-4.1 4.1H8c-2.7-.1-4-1.4-4.1-4.1V8C4 5.3 5.3 4 8 3.9h4ZM12 2H7.9C4.3 2.2 2.2 4.2 2 7.9v8.2c.2 3.6 2.2 5.7 5.9 5.9h8.2c3.6-.2 5.7-2.2 5.9-5.9V7.9C21.8 4.3 19.8 2.2 16.1 2H12Z"/></svg>',
+    tiktok: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 2h-3.3v13.4a2.9 2.9 0 1 1-2-2.8V9.2a6.2 6.2 0 1 0 5.3 6.2V8.6a7.6 7.6 0 0 0 4.4 1.4V6.7a4.4 4.4 0 0 1-4.4-4.4Z"/></svg>',
+    linkedin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.4 2H3.6C2.7 2 2 2.7 2 3.6v16.8c0 .9.7 1.6 1.6 1.6h16.8c.9 0 1.6-.7 1.6-1.6V3.6c0-.9-.7-1.6-1.6-1.6ZM8 19H5V9.5h3V19ZM6.5 8.2a1.7 1.7 0 1 1 0-3.5 1.7 1.7 0 0 1 0 3.5ZM19 19h-3v-4.6c0-1.1 0-2.5-1.5-2.5s-1.8 1.2-1.8 2.4V19h-3V9.5h2.9v1.3a3.1 3.1 0 0 1 2.8-1.5c3 0 3.6 2 3.6 4.6V19Z"/></svg>'
+  };
+  var LOGOS = [
+    ['MediaMarkt', 'https://images.squarespace-cdn.com/content/6916e92cba58a67204dfe745/177f411c-cc6f-43a6-821d-43515020eb42/Media_Markt_logo_black.png'],
+    ['Big Green Egg', 'https://images.squarespace-cdn.com/content/6916e92cba58a67204dfe745/f0f6f01f-3e70-494c-9768-969813e5bb05/Big-Green-Egg.png'],
+    ['YoungCapital', 'https://images.squarespace-cdn.com/content/6916e92cba58a67204dfe745/76a54a13-a389-4091-9397-d8cdf9a7a8fd/youngcapital_black.png'],
+    ['Parkeren Delft', 'https://images.squarespace-cdn.com/content/6916e92cba58a67204dfe745/1327b6b7-d258-480d-9a1f-d7dadb42bd54/ParkerenDelft-Logo.png']
+  ];
   function mountLinks(root, data) {
     root.classList.add('tk-links');
     var list = data.goodies.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
     var top = list[0], p = data.profile || {};
-    function tile(href, icon, title, sub, ext) {
-      return '<a class="tk-tile" href="' + href + '"' + (ext ? ' target="_blank" rel="noopener"' : '') + '><img src="' + BASE + icon + '" alt="" width="160" height="160" loading="lazy">' +
-        '<span class="tk-tile-t">' + esc(title) + '</span><span class="tk-tile-s">' + esc(sub) + '</span></a>';
+    var ext = ' target="_blank" rel="noopener"';
+    function toolRow(g) {
+      return '<a class="tk-trow" href="' + goodieHref(g, true) + '" data-spoor="' + ((g.group || 'video') === 'team' ? 'team' : 'zelf') + '">' +
+        (g.icon ? '<img src="' + BASE + g.icon + '" alt="" width="160" height="160" loading="lazy">' : '') +
+        '<span class="tk-trow-b"><span class="tk-trow-t">' + esc(g.title) + '</span><span class="tk-trow-s">' + esc(g.short || g.line) + '</span></span>' +
+        '<span class="tk-arr" aria-hidden="true">&rarr;</span></a>';
     }
+    function social(key, label, href) {
+      return '<a class="tk-soc" href="' + href + '"' + ext + ' data-spoor="zelf">' + ICON[key] + '<span>' + label + '</span></a>';
+    }
+    var videoTools = list.filter(function (g) { return g !== top && (g.group || 'video') === 'video'; });
+    var teamTools = list.filter(function (g) { return g !== top && g.group === 'team'; });
+
     var h = '<div class="tk-links-in">' +
+      '<header class="tk-bio-head">' +
       (p.photo ? '<img class="tk-avatar" src="' + esc(p.photo) + '" alt="Ed van der Molen" width="104" height="104">' : '') +
-      '<h1>' + esc(p.name || 'Ed van der Molen') + '</h1><p class="tk-sub">' + esc(p.tagline || '') + '</p>';
+      '<p class="tk-bio-name">' + esc(p.name || 'Ed van der Molen') + ' <span>· EdGPT</span></p>' +
+      '<h1>' + esc(p.headline || 'AI begrijpelijk maken voor de gewone mens.') + '</h1>' +
+      '<p class="tk-sub">' + esc(p.tagline || '') + '</p></header>';
+
     if (top) {
-      h += '<a class="tk-hero-card" href="' + goodieHref(top, true) + '">' + (top.image ? '<img src="' + BASE + top.image + '" alt="" width="1600" height="900">' : '') +
+      h += '<a class="tk-hero-card" href="' + goodieHref(top, true) + '" data-spoor="video">' + (top.image ? '<img src="' + BASE + top.image + '" alt="" width="1600" height="900">' : '') +
         '<span class="tk-hero-body"><span class="tk-pill is-new">Uit mijn nieuwste video</span><span class="tk-t">' + esc(top.title) + '</span>' +
         '<span class="tk-hero-s">' + esc(top.short || top.line) + '</span><span class="tk-hero-go">' + esc(cta(top)) + ' &rarr;</span></span></a>';
     }
-    h += '<div class="tk-tiles">' +
-      tile(LINKS.toolkit, 'img/tool-keuzehulp.webp', 'Gratis AI-tools', 'Prompts, keuzehulp, calculator') +
-      tile(LINKS.trainingen, 'img/tool-trainingskiezer.webp', 'AI-training', 'Voor je hele team') +
-      tile(LINKS.kennismaking, 'img/link-kennismaking.webp', 'Kennismaken', '30 minuten sparren', true) +
-      tile(LINKS.blog, 'img/link-blog.webp', 'Blog', 'Wat ik test en wat werkt') +
-      '</div>';
-    var tools = list.filter(function (g) { return g !== top && g.icon && !g.href; });
-    if (tools.length) {
-      h += '<p class="tk-strip-t">Meer gratis tools</p><div class="tk-strip">' + tools.map(function (g) {
-        return '<a href="' + goodieHref(g, true) + '"><img src="' + BASE + g.icon + '" alt="" width="160" height="160" loading="lazy"><span>' + esc(g.title) + '</span></a>';
+
+    // de splitsing: twee sporen
+    h += '<p class="tk-rail">Waar kom je voor?</p><nav class="tk-split" aria-label="Kies je spoor">' +
+      '<a class="tk-split-c" href="#tk-zelf" data-spoor="zelf"><span class="tk-split-k">Voor jezelf</span><span class="tk-split-s">Tools en prompts uit mijn video\'s, en volgen wat ik test</span><span class="tk-arr" aria-hidden="true">&darr;</span></a>' +
+      '<a class="tk-split-c is-team" href="#tk-team" data-spoor="team"><span class="tk-split-k">Voor je team</span><span class="tk-split-s">In-company AI-training, workflows en advies</span><span class="tk-arr" aria-hidden="true">&darr;</span></a>' +
+      '</nav>';
+
+    // spoor 1: voor jezelf
+    h += '<section class="tk-spoor" id="tk-zelf"><h2>Voor jezelf</h2>';
+    if (videoTools.length) h += '<div class="tk-tlist">' + videoTools.map(toolRow).join('') + '</div>';
+    h += '<p class="tk-rail">Volg wat ik test</p>' +
+      '<div class="tk-socs">' + social('instagram', 'Instagram', LINKS.instagram) + social('tiktok', 'TikTok', LINKS.tiktok) + social('linkedin', 'LinkedIn', LINKS.linkedin) + '</div>' +
+      '<div class="tk-more"><a href="' + LINKS.toolkit + '" data-spoor="zelf">Alle tools</a><a href="' + LINKS.blog + '" data-spoor="zelf">Blog: wat ik test en wat werkt</a></div>' +
+      '</section>';
+
+    // spoor 2: voor je team (de salesfunnel: aanbod, bewijs, CTA)
+    h += '<section class="tk-spoor tk-team" id="tk-team"><h2>Voor je team</h2>' +
+      '<p class="tk-team-l">Praktische AI-trainingen voor marketing- en contentteams. Met jullie eigen werk als oefenmateriaal, zodat je het de dag erna gewoon gebruikt.</p>' +
+      '<p class="tk-rail is-dark">Gewerkt voor</p><div class="tk-logos">' + LOGOS.map(function (l) {
+        return '<img src="' + l[1] + '?format=300w" alt="' + esc(l[0]) + '" loading="lazy">';
+      }).join('') + '</div>' +
+      '<p class="tk-rail is-dark">Waarmee ik help</p><div class="tk-svc">' +
+      '<a href="' + LINKS.trainingen + '" data-spoor="team"><span class="tk-svc-n">01</span><span class="tk-svc-b"><span class="tk-svc-t">In-company AI-training</span><span class="tk-svc-s">Een dagdeel of een hele dag, voor teams die met AI willen werken</span></span><span class="tk-arr" aria-hidden="true">&rarr;</span></a>' +
+      '<a href="' + LINKS.portfolio + '" data-spoor="team"><span class="tk-svc-n">02</span><span class="tk-svc-b"><span class="tk-svc-t">Workflows bouwen</span><span class="tk-svc-s">Concrete AI-oplossingen voor herhalend werk</span></span><span class="tk-arr" aria-hidden="true">&rarr;</span></a>' +
+      '<a href="' + LINKS.contact + '" data-spoor="team"><span class="tk-svc-n">03</span><span class="tk-svc-b"><span class="tk-svc-t">Advies en spreken</span><span class="tk-svc-s">Keynote, workshop of sparren op directieniveau</span></span><span class="tk-arr" aria-hidden="true">&rarr;</span></a>' +
+      '</div>' +
+      '<a class="tk-cta" href="' + LINKS.kennismaking + '"' + ext + ' data-spoor="team"><span class="tk-cta-t">Plan een kennismaking</span><span class="tk-cta-s">30 minuten, geen pitch. Jouw vraag, mijn advies.</span></a>';
+    if (teamTools.length) {
+      h += '<p class="tk-rail is-dark">Eerst zelf verkennen?</p><div class="tk-strip">' + teamTools.map(function (g) {
+        return '<a href="' + goodieHref(g, true) + '" data-spoor="team"><img src="' + BASE + g.icon + '" alt="" width="160" height="160" loading="lazy"><span>' + esc(g.title) + '</span></a>';
       }).join('') + '</div>';
     }
-    h += '<div class="tk-socials">' +
-      '<a href="' + LINKS.instagram + '" target="_blank" rel="noopener">Instagram</a>' +
-      '<a href="' + LINKS.tiktok + '" target="_blank" rel="noopener">TikTok</a>' +
-      '<a href="' + LINKS.linkedin + '" target="_blank" rel="noopener">LinkedIn</a>' +
-      '</div><p class="tk-links-foot"><a href="' + SITE + '">www.ed-gpt.nl</a></p></div>';
+    h += '</section><p class="tk-links-foot"><a href="' + SITE + '">www.ed-gpt.nl</a></p></div>';
     root.innerHTML = h;
+
+    // ankers zelf afhandelen: de site heeft smooth scroll en een vaste header
     root.addEventListener('click', function (e) {
       var a = e.target.closest && e.target.closest('a');
-      if (a) track('linkinbio_click', { link: (a.querySelector('.tk-t,.tk-tile-t,span') || a).textContent.trim().slice(0, 60) });
+      if (!a) return;
+      track('linkinbio_click', { link: (a.querySelector('.tk-t,.tk-split-k,.tk-trow-t,.tk-svc-t,.tk-cta-t,span') || a).textContent.trim().slice(0, 60), spoor: a.getAttribute('data-spoor') || '' });
+      var hash = a.getAttribute('href');
+      if (hash && hash.charAt(0) === '#') {
+        var t = root.querySelector(hash);
+        if (t) { e.preventDefault(); window.scrollTo({ top: t.getBoundingClientRect().top + window.pageYOffset - 16, behavior: 'smooth' }); }
+      }
     });
   }
 
@@ -206,7 +256,7 @@
     loadJs(BASE + 'goodies.js?v=' + BUST).then(function () {
       var data = window.EDGPT_TOOLKIT;
       [].forEach.call(roots, function (r) {
-        if (r.getAttribute('data-view') === 'links') mountLinks(r, data);
+        if (/^(links|linkinbio)$/.test(r.getAttribute('data-view'))) mountLinks(r, data);
         else mountToolkit(r, data);
       });
     }).catch(function () {

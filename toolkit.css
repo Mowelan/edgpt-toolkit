@@ -140,3 +140,64 @@
 .edtk .tk-strip a{flex:0 0 88px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12.5px;line-height:1.25;color:var(--ink70);text-align:center}
 .edtk .tk-strip img{width:72px;height:72px;border-radius:14px}
 .edtk .tk-strip a:hover span{color:var(--ink)}
+
+/* link in bio v3 (28-09-2026): nieuwste goodie, dan twee sporen: voor jezelf en voor je team */
+.edtk.tk-links{max-width:560px}
+.edtk .tk-links-in{align-items:stretch;text-align:left;padding:32px 16px 44px}
+.edtk .tk-bio-head{display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:22px}
+.edtk .tk-bio-head .tk-avatar{width:92px;height:92px}
+.edtk .tk-bio-name{font:600 12px/1 var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--ink50);margin:14px 0 10px}
+.edtk .tk-bio-name span{color:var(--purple)}
+.edtk .tk-links-in h1{font-size:clamp(28px,7.4vw,36px);margin:0 0 10px;max-width:16ch}
+.edtk .tk-links-in .tk-sub{margin:0 auto;max-width:38ch}
+.edtk .tk-arr{flex:none;font:500 18px/1 var(--body)}
+.edtk .tk-rail{font:600 12px/1 var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--ink50);margin:26px 0 12px}
+.edtk .tk-rail.is-dark{color:rgba(250,247,241,.55)}
+
+.edtk .tk-split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.edtk .tk-split-c{display:flex;flex-direction:column;gap:6px;padding:16px 14px 14px;border-radius:18px;background:var(--white);border:1.5px solid var(--ink);min-height:150px}
+.edtk .tk-split-c.is-team{background:var(--ink);color:var(--cream)}
+.edtk .tk-split-k{font:700 19px/1.1 var(--head);letter-spacing:-.02em}
+.edtk .tk-split-s{font-size:13.5px;line-height:1.35;color:var(--ink70)}
+.edtk .tk-split-c.is-team .tk-split-s{color:rgba(250,247,241,.75)}
+.edtk .tk-split-c .tk-arr{margin-top:auto}
+.edtk .tk-split-c:hover{transform:translateY(-2px)}
+.edtk .tk-split-c{transition:transform .15s}
+
+.edtk .tk-spoor{margin-top:34px;scroll-margin-top:16px}
+.edtk .tk-spoor h2{font-size:26px;margin:0 0 14px}
+.edtk .tk-tlist{display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
+.edtk .tk-trow{display:flex;align-items:center;gap:12px;padding:10px 14px 10px 10px;border-radius:16px;background:var(--white);border:1px solid var(--line)}
+.edtk .tk-trow:hover{border-color:var(--ink)}
+.edtk .tk-trow img{width:56px;height:56px;border-radius:12px;flex:none}
+.edtk .tk-trow-b,.edtk .tk-svc-b{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.edtk .tk-trow-t{font:700 16px/1.2 var(--head)}
+.edtk .tk-trow-s{font-size:13.5px;line-height:1.35;color:var(--ink70)}
+.edtk .tk-socs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.edtk .tk-soc{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 8px;border-radius:14px;border:1px solid var(--line-strong);font:600 14px var(--body)}
+.edtk .tk-soc svg{width:18px;height:18px;flex:none}
+.edtk .tk-soc:hover{border-color:var(--ink);background:var(--white)}
+.edtk .tk-more{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px;font:600 14.5px var(--body)}
+.edtk .tk-more a{text-decoration:underline;text-decoration-color:var(--purple);text-underline-offset:4px}
+
+.edtk .tk-team{background:var(--ink);color:var(--cream);border-radius:24px;padding:24px 18px 22px}
+.edtk .tk-team-l{font-size:15.5px;color:rgba(250,247,241,.8);margin:0}
+.edtk .tk-logos{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.edtk .tk-logos img{width:100%;height:52px;object-fit:contain;background:var(--cream);border-radius:12px;padding:10px}
+.edtk .tk-svc{display:flex;flex-direction:column;border-top:1px solid rgba(250,247,241,.14)}
+.edtk .tk-svc a{display:flex;align-items:center;gap:12px;padding:14px 2px;border-bottom:1px solid rgba(250,247,241,.14)}
+.edtk .tk-svc-n{font:500 13px var(--mono);color:var(--yellow);flex:none;width:24px}
+.edtk .tk-svc-t{font:700 16.5px/1.2 var(--head)}
+.edtk .tk-svc-s{font-size:13.5px;line-height:1.35;color:rgba(250,247,241,.68)}
+.edtk .tk-svc a:hover .tk-svc-t{color:var(--yellow)}
+.edtk .tk-cta{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;margin-top:20px;padding:18px 16px;border-radius:18px;background:var(--yellow);color:var(--ink)}
+.edtk .tk-cta:hover{background:var(--yellow-hover)}
+.edtk .tk-cta-t{font:700 20px/1.1 var(--head);letter-spacing:-.02em}
+.edtk .tk-cta-s{font-size:13.5px;color:rgba(26,26,26,.75)}
+.edtk .tk-team .tk-strip a{color:rgba(250,247,241,.75)}
+.edtk .tk-team .tk-strip a:hover span{color:var(--cream)}
+.edtk .tk-team .tk-strip img{background:var(--cream)}
+.edtk .tk-links-foot{text-align:center;margin-top:28px}
+.edtk .tk-team .tk-strip a{flex-basis:108px}
+.edtk .tk-team .tk-strip span{hyphens:manual;-webkit-hyphens:manual}
+.edtk .tk-spoor h2 + .tk-rail{margin-top:4px}

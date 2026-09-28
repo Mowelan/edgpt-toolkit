@@ -1,6 +1,6 @@
 /*
  * Register van de toolkit. Nieuwste goodie = hoogste datum, die staat automatisch bovenaan
- * op /toolkit en als uitgelichte knop op /links.
+ * op /tools en als uitgelichte kaart op /linkinbio.
  *
  * Velden: slug (ook het #anker), title, type (Tool | Prompts | Guide), line (1-2 zinnen),
  * short (korte versie voor /links), video (bronvideo, leest als "Uit ..."), cta (optionele knoptekst), keyword (comment-keyword,
@@ -12,7 +12,8 @@
 window.EDGPT_TOOLKIT = {
   profile: {
     name: 'Ed van der Molen',
-    tagline: 'AI voor marketing en content. Ik test de nieuwste tools en laat zien hoe je ze echt gebruikt.',
+    headline: 'AI begrijpelijk maken voor de gewone mens.',
+    tagline: 'Ik test de nieuwste AI-tools en laat zien hoe je ze echt gebruikt. En ik train teams om er zelf mee te werken.',
     photo: 'https://images.squarespace-cdn.com/content/v1/6916e92cba58a67204dfe745/e5fad7c0-4450-4fcf-bd10-ec5ddc23738d/ed_headernew.png?format=500w'
   },
   goodies: [
@@ -40,7 +41,7 @@ window.EDGPT_TOOLKIT = {
       line: 'Acht vragen over je werk, je team en je data. Je krijgt een advies met uitleg per antwoord en een eerlijk nadeel.' },
     { slug: 'promptbouwer', icon: 'img/tool-promptbouwer.webp', aliases: ['prompt'], title: 'Prompt-bouwer', type: 'Tool', group: 'team', date: '2026-09-05',
       line: 'Rol, taak, context, voorbeelden, format, toon en beperkingen. Je krijgt een prompt die je zo in ChatGPT, Claude, Copilot of Gemini plakt.' },
-    { slug: 'tijdwinst', icon: 'img/tool-tijdwinst.webp', title: 'Tijdwinstcalculator', type: 'Tool', group: 'team', date: '2026-09-05',
+    { slug: 'tijdwinst', icon: 'img/tool-tijdwinst.webp', title: 'Tijdwinst\u00ADcalculator', type: 'Tool', group: 'team', date: '2026-09-05',
       line: 'Teamgrootte, uren repetitief werk en uurtarief. Je ziet uren per maand en euro per jaar, afgezet tegen een dagdeel of een trainingsdag.' },
     { slug: 'trainingskiezer', icon: 'img/tool-trainingskiezer.webp', title: 'Trainingskiezer', type: 'Tool', group: 'team', date: '2026-09-05',
       line: 'Vier vragen, zes trainingsvormen. Je krijgt de vorm die het beste past en een alternatief om mee te combineren.' },
