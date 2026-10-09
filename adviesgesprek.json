@@ -1,0 +1,8 @@
+{
+  "plekken": 5,
+  "start": 4,
+  "geboekt": {"2026-10": 0},
+  "leegVolgorde": [3, 1, 5, 2, 4],
+  "boekUrl": "https://calendar.google.com/calendar/appointments/schedules/AcZssZ0kFB9XkS1KrUJ32n0bBvHIMFTI0Q1ZolmWYTml8ogo63v_7S29P5t73NRLE0x45kM7sU4Rh9Rt?gv=true",
+  "scriptUrl": "https://script.google.com/macros/s/AKfycbyHFOXnfsuV87NHTmb-jRZoDeK_tzDRP_5dZQTurSVfGClTpMrCGMAvb6uTPpQhDNtnHg/exec"
+}

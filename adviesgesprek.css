@@ -1,0 +1,139 @@
+/* Adviesgesprek (www.ed-gpt.nl/adviesgesprek): labels aan een lijn. Alles onder .edtk.ag, bovenop toolkit.css. */
+.edtk.ag{container-type:inline-size}
+
+.edtk.ag .ag-top{padding-bottom:0}
+.edtk.ag .ag-top h1{font-size:clamp(38px,6.2vw,84px);font-size:clamp(38px,6.2cqw,84px);max-width:17ch;margin-bottom:20px}
+.edtk.ag .ag-top h1 em{font-style:normal;color:var(--purple)}
+
+/* ---------- de lijn met labels ---------- */
+.edtk.ag .ag-rail{
+  --tw:clamp(58px,17vw,200px);--sag:clamp(12px,3.4vw,46px);
+  --tw:clamp(58px,17cqw,200px);--sag:clamp(12px,3.4cqw,46px);
+  position:relative;display:grid;grid-template-columns:repeat(var(--n,5),1fr);
+  margin-top:clamp(30px,5vw,68px);padding-bottom:clamp(20px,3vw,40px)}
+.edtk.ag .ag-string{position:absolute;left:0;top:0;width:100%;height:var(--sag);overflow:visible;pointer-events:none;
+  clip-path:inset(-6px 100% -6px 0);transition:clip-path .8s cubic-bezier(.2,.7,.2,1)}
+.edtk.ag .ag-rail.is-on .ag-string{clip-path:inset(-6px 0 -6px 0)}
+.edtk.ag .ag-string path{fill:none;stroke:var(--ink);stroke-width:1.5}
+
+.edtk.ag .ag-hang{display:flex;justify-content:center;padding-top:calc(var(--sag) * var(--m,1));
+  opacity:0;transition:opacity .25s ease-out}
+.edtk.ag .ag-hang.is-in{opacity:1}
+.edtk.ag .ag-swing{position:relative;display:flex;flex-direction:column;align-items:center;transform-origin:50% 0;will-change:transform;
+  font-size:calc(var(--tw) / 10);filter:drop-shadow(0 .5em .55em rgba(26,26,26,.14))}
+.edtk.ag .ag-thread{position:relative;z-index:1;width:1.5px;height:1.9em;background:var(--ink)}
+
+.edtk.ag .ag-tag{position:relative;display:flex;flex-direction:column;align-items:center;
+  width:var(--tw);aspect-ratio:10/15;margin:-1.15em 0 0;padding:0;border:0;cursor:pointer;
+  font-size:inherit;font-family:var(--head);color:var(--ink);background:var(--yellow);
+  border-radius:0 0 .9em .9em;clip-path:polygon(24% 0,76% 0,100% 15%,100% 100%,0 100%,0 15%);
+  transition:background .18s}
+.edtk.ag .ag-tag:hover{background:var(--yellow-hover)}
+.edtk.ag .ag-tag > *{position:relative;z-index:1}
+/* toetsenbordfocus: een rand die de hele vorm volgt (een outline wordt door de clip-path afgesneden) */
+.edtk.ag .ag-tag:focus-visible{outline:none;background:var(--purple)}
+.edtk.ag .ag-tag:focus-visible::before{content:"";position:absolute;inset:3px;z-index:0;background:var(--yellow);
+  border-radius:0 0 calc(.9em - 3px) calc(.9em - 3px);clip-path:polygon(24% 0,76% 0,100% 15%,100% 100%,0 100%,0 15%)}
+.edtk.ag .ag-hole{flex:none;width:1.3em;height:1.3em;margin-top:.5em;border-radius:50%;background:var(--cream);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.edtk.ag .ag-k{margin-top:.95em;font:600 max(9px,.95em)/1 var(--body);letter-spacing:.2em;text-transform:uppercase;padding-left:.2em}
+.edtk.ag .ag-n{font:700 7.2em/1 var(--head);letter-spacing:-.04em}
+.edtk.ag .ag-foot{display:flex;justify-content:center;gap:.9em;width:100%;margin-top:auto;padding:.75em 0 .95em;
+  border-top:1.5px dashed currentColor;font:600 max(9px,.82em)/1 var(--body);letter-spacing:.14em;text-transform:uppercase}
+
+/* lege haak: alleen het lusje van het touw */
+.edtk.ag .is-leeg .ag-swing{filter:none}
+.edtk.ag .is-leeg .ag-thread{height:2.5em}
+.edtk.ag .ag-loop{width:1.5em;height:2em;margin-top:-1px;border:1.5px solid var(--ink);border-radius:50%}
+
+/* afgescheurd: het label is weg, de snipper rond het gaatje blijft aan het touw */
+.edtk.ag .ag-scrap{display:none;position:absolute;left:50%;top:.8em;width:2.5em;height:2.2em;margin-left:-1.25em;background:var(--yellow);
+  clip-path:polygon(6% 34%,20% 8%,38% 17%,54% 0,72% 13%,91% 7%,100% 40%,89% 62%,97% 85%,75% 100%,60% 85%,43% 100%,27% 83%,9% 96%,0 64%)}
+.edtk.ag .ag-scrap::after{content:"";position:absolute;left:50%;top:50%;width:1.3em;height:1.3em;margin:-.65em 0 0 -.65em;border-radius:50%;background:var(--cream);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.edtk.ag .ag-hang.is-af .ag-tag{visibility:hidden}
+.edtk.ag .ag-hang.is-af .ag-scrap,.edtk.ag .ag-hang.is-weg .ag-scrap{display:block}
+.edtk.ag .ag-hang.is-weg .ag-swing{padding-bottom:1.2em;filter:drop-shadow(0 .25em .3em rgba(26,26,26,.14))}
+
+/* de maand is vol: een donker label voor de wachtlijst */
+.edtk.ag .ag-tag.is-wacht{background:var(--ink);color:var(--yellow)}
+.edtk.ag .ag-tag.is-wacht:hover{background:#000}
+.edtk.ag .ag-tag.is-wacht:focus-visible{background:var(--purple)}
+.edtk.ag .ag-tag.is-wacht:focus-visible::before{background:var(--ink)}
+.edtk.ag .ag-tag.is-wacht .ag-n{margin-top:.55em;font-size:2.9em;line-height:.98;letter-spacing:-.03em;text-align:center}
+
+@container (max-width:620px){
+  .edtk.ag .ag-foot{display:none}
+  .edtk.ag .ag-tag{aspect-ratio:10/12.6}
+  .edtk.ag .ag-n{font-size:6.4em;margin-top:.04em}
+  .edtk.ag .ag-tag.is-wacht .ag-n{margin-top:.5em;font-size:2.5em}
+}
+
+/* ---------- stand en knop ---------- */
+.edtk.ag .ag-status{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px 32px;
+  padding-top:clamp(6px,1.6vw,18px);padding-bottom:clamp(32px,5vw,60px)}
+.edtk.ag .ag-count{margin:0;font:700 clamp(26px,3.8vw,46px)/1.05 var(--head);letter-spacing:-.025em}
+.edtk.ag .ag-count small{display:block;margin-top:10px;font:500 16.5px/1.5 var(--body);letter-spacing:0;color:var(--ink70);max-width:46ch}
+
+/* ---------- met wie ---------- */
+.edtk.ag .ag-under{padding-top:0}
+.edtk.ag .ag-wie{display:grid;gap:22px 40px;align-items:center;padding-top:clamp(24px,3.6vw,40px);border-top:1px solid var(--line)}
+@container (min-width:860px){.edtk.ag .ag-wie{grid-template-columns:1.25fr 1fr}}
+.edtk.ag .ag-ed{display:flex;gap:16px;align-items:center}
+.edtk.ag .ag-ed img{flex:none;width:76px;height:76px;border-radius:50%;object-fit:cover;object-position:50% 8%;background:var(--purple)}
+.edtk.ag .ag-ed b{display:block;margin-bottom:2px;font:700 19px/1.2 var(--head);letter-spacing:-.01em}
+.edtk.ag .ag-ed span{display:block;font-size:15.5px;line-height:1.5;color:var(--ink70);max-width:52ch}
+.edtk.ag .ag-voor .tk-rail{margin-top:0}
+.edtk.ag .ag-logos{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.edtk.ag .ag-logos img{width:100%;height:52px;object-fit:contain;background:var(--white);border:1px solid var(--line);border-radius:12px;padding:10px}
+
+/* ---------- het afgescheurde label: voorkant vliegt naar het midden, achterkant is de agenda ---------- */
+.edtk.ag-layer{position:fixed;inset:0;z-index:2147483000;background:none;border-radius:0;overflow:hidden;perspective:1600px}
+.edtk.ag-layer .ag-dim{position:absolute;inset:0;background:rgba(26,26,26,.62);opacity:0;transition:opacity .4s ease}
+.edtk.ag-layer.is-open .ag-dim{opacity:1}
+.edtk.ag-layer .ag-front{position:absolute;left:50%;top:50%;--tw:var(--fw);font-size:calc(var(--fw) / 10);transform:translate(-50%,-50%);
+  filter:drop-shadow(0 1em 1.4em rgba(0,0,0,.3));pointer-events:none;backface-visibility:hidden}
+.edtk.ag-layer .ag-front .ag-tag{margin:0;cursor:default;
+  clip-path:polygon(24% 0,44% 0,47.5% 4%,49% 2.6%,50% 7.5%,51.4% 3%,53% 4.4%,56% 0,76% 0,100% 15%,100% 100%,0 100%,0 15%)}
+.edtk.ag-layer .ag-back{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);visibility:hidden;
+  width:min(680px,calc(100vw - 20px));height:min(860px,calc(100vh - 20px));height:min(860px,calc(100dvh - 20px));
+  filter:drop-shadow(0 18px 28px rgba(0,0,0,.3))}
+.edtk.ag-layer .ag-back-in{--cx:64px;--cy:56px;display:flex;flex-direction:column;height:100%;padding:16px 30px 30px;
+  background:var(--yellow);color:var(--ink);border-radius:0 0 26px 26px;
+  clip-path:polygon(var(--cx) 0,calc(50% - 20px) 0,calc(50% - 5px) 11px,50% 26px,calc(50% + 6px) 12px,calc(50% + 20px) 0,calc(100% - var(--cx)) 0,100% var(--cy),100% 100%,0 100%,0 var(--cy))}
+.edtk.ag-layer .ag-back .ag-hole{align-self:center;width:26px;height:26px;margin:0}
+.edtk.ag-layer .ag-back-head{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:28px}
+.edtk.ag-layer .ag-back .ag-k{display:block;margin:0 0 10px;padding:0;font-size:12px}
+.edtk.ag-layer .ag-back h2{font-size:clamp(28px,5.4vw,42px)}
+.edtk.ag-layer .ag-x{flex:none;padding:12px 20px;font-size:14.5px}
+.edtk.ag-layer .ag-back-sub{margin:14px 0 26px;font-size:16px;line-height:1.5;color:rgba(26,26,26,.8);max-width:44ch}
+
+/* het briefje: lichtgeel papier met een plakrand. De agenda van Google ligt er met multiply overheen, zodat wit papierkleur wordt. */
+.edtk.ag-layer .ag-cal{flex:1;min-height:0;isolation:isolate;overflow:auto;overscroll-behavior:contain;border-radius:3px;
+  background:linear-gradient(to bottom,rgba(26,26,26,.07),rgba(26,26,26,0) 22px),var(--yellow-tint);
+  box-shadow:0 1px 0 rgba(26,26,26,.06),0 18px 16px -12px rgba(26,26,26,.38)}
+.edtk.ag-layer .ag-cal iframe{display:block;width:100%;height:100%;border:0;mix-blend-mode:multiply}
+.edtk.ag-layer .ag-paneel{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;
+  min-height:100%;padding:40px 28px;color:var(--ink70);font-size:15.5px}
+.edtk.ag-layer .ag-paneel strong{font:700 22px/1.2 var(--head);letter-spacing:-.01em;color:var(--ink)}
+.edtk.ag-layer .ag-paneel span{max-width:44ch}
+.edtk.ag-layer .ag-paneel a{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--purple);text-underline-offset:3px}
+
+.edtk.ag-layer .ag-form{display:flex;flex-direction:column;gap:16px;padding:clamp(22px,4.4vw,34px)}
+.edtk.ag-layer .ag-form label{display:flex;flex-direction:column;gap:7px;font:600 14.5px/1.3 var(--body)}
+.edtk.ag-layer .ag-form label i{font-style:normal;font-weight:500;color:var(--ink70)}
+.edtk.ag-layer .ag-form input,.edtk.ag-layer .ag-form textarea{width:100%;padding:12px 13px;font:500 16px/1.4 var(--body);color:var(--ink);
+  background:var(--white);border:1.5px solid var(--ink);border-radius:8px;resize:vertical}
+.edtk.ag-layer .ag-form input:focus,.edtk.ag-layer .ag-form textarea:focus{outline:2px solid var(--purple);outline-offset:1px}
+.edtk.ag-layer .ag-form .ag-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.edtk.ag-layer .ag-form .tk-btn{align-self:flex-start;margin-top:4px}
+.edtk.ag-layer .ag-form .tk-btn:disabled{opacity:.6;cursor:default}
+.edtk.ag-layer .ag-form-fout{margin:0;padding:10px 12px;border-radius:8px;background:var(--white);border:1.5px solid var(--ink);font:600 14.5px/1.4 var(--body)}
+.edtk.ag-layer .ag-form-priv{margin:0;font-size:13.5px;color:var(--ink70)}
+@media (max-width:520px){
+  .edtk.ag-layer .ag-back-in{--cx:44px;--cy:40px;padding:12px 16px 18px}
+  .edtk.ag-layer .ag-back-head{margin-top:18px;gap:12px}
+  .edtk.ag-layer .ag-back-sub{margin:10px 0 18px;font-size:15.5px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .edtk.ag .ag-string,.edtk.ag .ag-hang,.edtk.ag-layer .ag-dim{transition:none}
+}

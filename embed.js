@@ -249,6 +249,18 @@
     });
   }
 
+  /* ---------- losse pagina met eigen module en stijl (bv. www.ed-gpt.nl/adviesgesprek) ---------- */
+  var PAGES = ['adviesgesprek'];
+  function mountPage(root, data, name) {
+    api.logos = LOGOS;
+    api.css(BASE + name + '.css');
+    api.js(BASE + name + '.js').then(function () {
+      window.EDGPT_TOOLKIT_MODULES[name](root, data, api);
+    }).catch(function () {
+      root.innerHTML = '<div class="tk-wrap"><p class="tk-follow">Deze pagina laadt nu niet. Ververs de pagina over een minuutje, of <a href="' + LINKS.contact + '">stuur me een bericht</a>.</p></div>';
+    });
+  }
+
   function boot() {
     var roots = document.querySelectorAll('.edgpt-toolkit');
     if (!roots.length) return;
@@ -256,7 +268,9 @@
     loadJs(BASE + 'goodies.js?v=' + BUST).then(function () {
       var data = window.EDGPT_TOOLKIT;
       [].forEach.call(roots, function (r) {
-        if (/^(links|linkinbio)$/.test(r.getAttribute('data-view'))) mountLinks(r, data);
+        var view = r.getAttribute('data-view');
+        if (PAGES.indexOf(view) > -1) mountPage(r, data, view);
+        else if (/^(links|linkinbio)$/.test(view)) mountLinks(r, data);
         else mountToolkit(r, data);
       });
     }).catch(function () {
