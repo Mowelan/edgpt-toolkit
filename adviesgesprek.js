@@ -362,7 +362,7 @@
         layer.setAttribute('aria-label', wacht ? titel : 'Plek ' + plek + ': kies een moment');
         layer.innerHTML = '<div class="ag-dim"></div>' +
           '<div class="ag-front" style="--fw:' + fw.toFixed(1) + 'px" aria-hidden="true"><div class="ag-tag' + (wacht ? ' is-wacht' : '') + '">' + tag.innerHTML + '</div></div>' +
-          '<div class="ag-back"><div class="ag-back-in"><span class="ag-hole"></span>' +
+          '<div class="ag-back' + (wacht ? '' : ' is-agenda') + '"><div class="ag-back-in"><span class="ag-hole"></span>' +
           '<div class="ag-back-head"><div><span class="ag-k">' + (wacht ? 'Wachtlijst' : 'Plek ' + esc(plek)) + '</span><h2>' + esc(titel) + '</h2></div>' +
           '<button type="button" class="tk-btn tk-btn-ink ag-x">Sluiten</button></div>' +
           '<p class="ag-back-sub">' + (wacht
