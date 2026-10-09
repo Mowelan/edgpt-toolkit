@@ -108,7 +108,24 @@
     var nu = maandNu();
     var boekUrl = '', scriptUrl = '';
     var stand = { cfg: null, geboekt: 0 };
-    var zelfGescheurd = []; // plekken die deze bezoeker afscheurde: die verdwijnen als eerste bij een nieuwe boeking
+    // plekken die deze bezoeker zelf afscheurde en boekte: die verdwijnen als eerste, ook na opnieuw laden
+    var zelfGescheurd = lijst('zelf');
+    function lijst(naam) {
+      try { return JSON.parse(localStorage.getItem('edgpt-adviesgesprek-' + naam + '-' + nu.key) || '[]'); } catch (e) { return []; }
+    }
+    function bewaarLijst(naam, waarde) {
+      try { localStorage.setItem('edgpt-adviesgesprek-' + naam + '-' + nu.key, JSON.stringify(waarde)); } catch (e) {}
+    }
+    /* Nieuwe stand van de teller: is er sinds het laatst afgescheurde label een boeking bij, dan was dat dit label. */
+    function nieuweStand(g) {
+      var laatst = lijst('laatst')[0], vorige = onthouden(nu.key);
+      if (laatst && g > (vorige == null ? stand.geboekt : vorige) && zelfGescheurd.indexOf(laatst) < 0) {
+        zelfGescheurd.unshift(laatst);
+        bewaarLijst('zelf', zelfGescheurd);
+      }
+      if (laatst && g !== vorige) bewaarLijst('laatst', []);
+      onthoud(nu.key, g);
+    }
     var opruimers = []; // luisteraars en timers van de huidige lijn, zodat de lijn opnieuw getekend kan worden
     root.classList.add('ag');
 
@@ -143,7 +160,7 @@
       if (scriptUrl) {
         live(scriptUrl, nu.key).then(function (g) {
           if (g == null) return;
-          onthoud(nu.key, g);
+          nieuweStand(g);
           if (g !== stand.geboekt && !document.querySelector('.ag-layer')) herteken(g);
         });
       }
@@ -402,6 +419,7 @@
         if (perTag[i - 1]) sim.duw(perTag[i - 1], 55, 60);
         if (perTag[i + 1]) sim.duw(perTag[i + 1], -55, 60);
         api.track('adviesgesprek_plek', { plek: wacht ? 'wachtlijst' : plek });
+        if (!wacht) bewaarLijst('laatst', [+plek]);
 
         function staat() {
           if (open) open.bezig = false;
@@ -444,11 +462,10 @@
           api.track('adviesgesprek_sluit', {});
           // net geboekt? Dan telt de agenda er een meer en hangt dit label er niet meer
           if (scriptUrl && !o.wacht) {
-            var plek = +o.tag.getAttribute('data-plek');
             live(scriptUrl + (scriptUrl.indexOf('?') < 0 ? '?' : '&') + 'vers=1', nu.key).then(function (g) {
-              if (g != null) onthoud(nu.key, g);
-              if (g == null || g === stand.geboekt || open) return;
-              if (g > stand.geboekt && zelfGescheurd.indexOf(plek) < 0) zelfGescheurd.unshift(plek);
+              if (g == null) return;
+              nieuweStand(g);
+              if (g === stand.geboekt || open) return;
               herteken(g);
             });
           }
