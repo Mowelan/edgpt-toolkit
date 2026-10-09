@@ -17,8 +17,8 @@
 (function () {
   var MAANDEN = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
   var KORT = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
-  var START_HOEK = [-16, 12, -20, 14, -10, 9, -13];
-  var VEER = { label: [40, 1.7], los: [95, 1.1] }; // [stijfheid, demping]: een lege haak slingert sneller en lichter
+  var START_HOEK = [-10, 8, -12, 9, -7, 6, -8];
+  var VEER = { label: [40, 2.2], los: [95, 1.4] }; // [stijfheid, demping]: een lege haak slingert sneller en lichter
   var MAIL = 'info@ed-gpt.nl';
 
   function maandNu() {
@@ -35,11 +35,18 @@
     return { key: key(y, m), naam: MAANDEN[m - 1], volgende: MAANDEN[vm - 1], volgendeKort: KORT[vm - 1], volgendeKey: key(vy, vm) };
   }
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  /* Laatst bekende stand van deze bezoeker, zodat de lijn bij een volgend bezoek meteen klopt. */
+  function onthouden(key) {
+    try { var v = localStorage.getItem('edgpt-adviesgesprek-' + key); return v == null ? null : +v; } catch (e) { return null; }
+  }
+  function onthoud(key, aantal) {
+    try { localStorage.setItem('edgpt-adviesgesprek-' + key, String(aantal)); } catch (e) {}
+  }
   function hoofdletter(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-  /* De echte stand: aantal boekingen van deze maand uit de agenda. Geen antwoord binnen 2,5 seconde = reserve-stand. */
+  /* De echte stand: aantal boekingen van deze maand uit de agenda. De pagina wacht hier niet op (zie teken). */
   function live(url, key) {
-    var wacht = new Promise(function (ok) { setTimeout(function () { ok(null); }, 2500); });
+    var wacht = new Promise(function (ok) { setTimeout(function () { ok(null); }, 8000); });
     var haal = fetch(url + (url.indexOf('?') < 0 ? '?' : '&') + 'maand=' + key)
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) { return d && typeof d.geboekt === 'number' ? d.geboekt : null; })
@@ -130,9 +137,16 @@
       root.innerHTML = h;
       requestAnimationFrame(function () { root.querySelector('.ag-rail').classList.add('is-on'); });
 
-      var reserve = cfg ? ((cfg.geboekt || {})[nu.key] || 0) : 0;
-      if (scriptUrl) live(scriptUrl, nu.key).then(function (g) { vul(cfg, g == null ? reserve : g); });
-      else vul(cfg, reserve);
+      // meteen ophangen met de laatst bekende stand; de teller corrigeert op de achtergrond als die afwijkt
+      var bekend = onthouden(nu.key);
+      vul(cfg, bekend != null ? bekend : (cfg ? ((cfg.geboekt || {})[nu.key] || 0) : 0));
+      if (scriptUrl) {
+        live(scriptUrl, nu.key).then(function (g) {
+          if (g == null) return;
+          onthoud(nu.key, g);
+          if (g !== stand.geboekt && !document.querySelector('.ag-layer')) herteken(g);
+        });
+      }
     }
 
     function hangHtml(i, soort, m) {
@@ -266,9 +280,9 @@
 
       hangs.forEach(function (hang, i) {
         var los = !hang.querySelector('.ag-tag');
-        perTag.push(sim.voegToe(hang.querySelector('.ag-swing'), los ? 'los' : 'label', los ? 26 - i * 9 : START_HOEK[i % START_HOEK.length]));
+        perTag.push(sim.voegToe(hang.querySelector('.ag-swing'), los ? 'los' : 'label', los ? 16 - i * 6 : START_HOEK[i % START_HOEK.length]));
         // de ene opkomst: lijn, dan de labels een voor een
-        setTimeout(function () { hang.classList.add('is-in'); sim.wek(); }, reduce ? 0 : 450 + i * 130);
+        setTimeout(function () { hang.classList.add('is-in'); sim.wek(); }, reduce ? 0 : 120 + i * 70);
       });
 
       // muis: een label dat je raakt, zwaait mee met de richting van je beweging
@@ -280,6 +294,15 @@
         lx = e.clientX; lt = t;
       });
       aan(rail, 'pointerleave', function () { lx = null; vx = 0; });
+      // zodra iemand naar de labels gaat: verbinding met de agenda van Google alvast openen, dan laadt die sneller
+      function warmOp() {
+        if (!boekUrl || document.querySelector('link[data-ag-warm]')) return;
+        var l = document.createElement('link');
+        l.rel = 'preconnect'; l.href = 'https://calendar.google.com'; l.setAttribute('data-ag-warm', '1');
+        document.head.appendChild(l);
+      }
+      aan(rail, 'pointerenter', warmOp);
+      aan(rail, 'touchstart', warmOp, { passive: true });
       hangs.forEach(function (hang, i) {
         hang.querySelector('.ag-swing').addEventListener('pointerenter', function (e) {
           if (e.pointerType === 'touch') return;
@@ -395,12 +418,12 @@
           { transform: T(van.x, van.y, hoek, s0, 0), easing: 'cubic-bezier(.2,1.5,.4,1)' },
           { transform: T(van.x, van.y + 20, hoek + 7, s0, 0), offset: 0.2, easing: 'cubic-bezier(.45,0,.15,1)' },
           { transform: T(0, 0, 0, 1, 0) }
-        ], { duration: 820, fill: 'forwards' }).finished
-          .then(function () { return stap(front, [{ transform: T(0, 0, 0, 1, 0) }, { transform: T(0, 0, 0, 1, 90) }], 210, 'cubic-bezier(.5,0,1,.6)'); })
+        ], { duration: 540, fill: 'forwards' }).finished
+          .then(function () { return stap(front, [{ transform: T(0, 0, 0, 1, 0) }, { transform: T(0, 0, 0, 1, 90) }], 140, 'cubic-bezier(.5,0,1,.6)'); })
           .then(function () {
             front.style.visibility = 'hidden';
             back.style.visibility = 'visible';
-            return stap(back, [{ transform: B(-90, 0.9) }, { transform: B(0, 1) }], 380, 'cubic-bezier(.2,.9,.3,1.12)');
+            return stap(back, [{ transform: B(-90, 0.9) }, { transform: B(0, 1) }], 260, 'cubic-bezier(.2,.9,.3,1.12)');
           })
           .then(staat, staat);
       }
@@ -423,6 +446,7 @@
           if (scriptUrl && !o.wacht) {
             var plek = +o.tag.getAttribute('data-plek');
             live(scriptUrl + (scriptUrl.indexOf('?') < 0 ? '?' : '&') + 'vers=1', nu.key).then(function (g) {
+              if (g != null) onthoud(nu.key, g);
               if (g == null || g === stand.geboekt || open) return;
               if (g > stand.geboekt && zelfGescheurd.indexOf(plek) < 0) zelfGescheurd.unshift(plek);
               herteken(g);
@@ -431,13 +455,13 @@
         }
         if (!kanBewegen) { hangTerug(); return; }
         var naar = vanMidden(o.tag);
-        stap(o.back, [{ transform: B(0, 1) }, { transform: B(-90, 0.9) }], 210, 'cubic-bezier(.5,0,1,.6)')
+        stap(o.back, [{ transform: B(0, 1) }, { transform: B(-90, 0.9) }], 140, 'cubic-bezier(.5,0,1,.6)')
           .then(function () {
             o.back.style.visibility = 'hidden';
             o.front.style.visibility = 'visible';
-            return stap(o.front, [{ transform: T(0, 0, 0, 1, 90) }, { transform: T(0, 0, 0, 1, 0) }], 210, 'cubic-bezier(0,.4,.5,1)');
+            return stap(o.front, [{ transform: T(0, 0, 0, 1, 90) }, { transform: T(0, 0, 0, 1, 0) }], 140, 'cubic-bezier(0,.4,.5,1)');
           })
-          .then(function () { return stap(o.front, [{ transform: T(0, 0, 0, 1, 0) }, { transform: T(naar.x, naar.y, 0, o.s0, 0) }], 460, 'cubic-bezier(.45,0,.2,1)'); })
+          .then(function () { return stap(o.front, [{ transform: T(0, 0, 0, 1, 0) }, { transform: T(naar.x, naar.y, 0, o.s0, 0) }], 320, 'cubic-bezier(.45,0,.2,1)'); })
           .then(hangTerug, hangTerug);
       }
 

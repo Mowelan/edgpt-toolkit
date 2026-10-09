@@ -12,12 +12,12 @@
   position:relative;display:grid;grid-template-columns:repeat(var(--n,5),1fr);
   margin-top:clamp(30px,5vw,68px);padding-bottom:clamp(20px,3vw,40px)}
 .edtk.ag .ag-string{position:absolute;left:0;top:0;width:100%;height:var(--sag);overflow:visible;pointer-events:none;
-  clip-path:inset(-6px 100% -6px 0);transition:clip-path .8s cubic-bezier(.2,.7,.2,1)}
+  clip-path:inset(-6px 100% -6px 0);transition:clip-path .45s cubic-bezier(.2,.7,.2,1)}
 .edtk.ag .ag-rail.is-on .ag-string{clip-path:inset(-6px 0 -6px 0)}
 .edtk.ag .ag-string path{fill:none;stroke:var(--ink);stroke-width:1.5}
 
 .edtk.ag .ag-hang{display:flex;justify-content:center;padding-top:calc(var(--sag) * var(--m,1));
-  opacity:0;transition:opacity .25s ease-out}
+  opacity:0;transition:opacity .16s ease-out}
 .edtk.ag .ag-hang.is-in{opacity:1}
 .edtk.ag .ag-swing{position:relative;display:flex;flex-direction:column;align-items:center;transform-origin:50% 0;will-change:transform;
   font-size:calc(var(--tw) / 10);filter:drop-shadow(0 .5em .55em rgba(26,26,26,.14))}
@@ -87,7 +87,7 @@
 
 /* ---------- het afgescheurde label: voorkant vliegt naar het midden, achterkant is de agenda ---------- */
 .edtk.ag-layer{position:fixed;inset:0;z-index:2147483000;background:none;border-radius:0;overflow:hidden;perspective:1600px}
-.edtk.ag-layer .ag-dim{position:absolute;inset:0;background:rgba(26,26,26,.62);opacity:0;transition:opacity .4s ease}
+.edtk.ag-layer .ag-dim{position:absolute;inset:0;background:rgba(26,26,26,.62);opacity:0;transition:opacity .28s ease}
 .edtk.ag-layer.is-open .ag-dim{opacity:1}
 .edtk.ag-layer .ag-front{position:absolute;left:50%;top:50%;--tw:var(--fw);font-size:calc(var(--fw) / 10);transform:translate(-50%,-50%);
   filter:drop-shadow(0 1em 1.4em rgba(0,0,0,.3));pointer-events:none;backface-visibility:hidden}
