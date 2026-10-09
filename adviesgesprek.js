@@ -199,7 +199,8 @@
 
       // per haak: nooit opgehangen (haak), echt geboekt (weg: snipper), vrij (label) of de wachtlijst
       var soort = {};
-      volgorde.slice(0, n - start).forEach(function (plek) { soort[plek] = 'haak'; });
+      // keuze Ed (9 okt 2026): de plek die niet wordt opgehangen ziet er net zo uit als een geboekte plek (snipper)
+      volgorde.slice(0, n - start).forEach(function (plek) { soort[plek] = 'weg'; });
       var opgehangen = volgorde.slice(n - start);
       opgehangen = zelfGescheurd.filter(function (plek) { return opgehangen.indexOf(plek) > -1; })
         .concat(opgehangen.filter(function (plek) { return zelfGescheurd.indexOf(plek) < 0; }));
