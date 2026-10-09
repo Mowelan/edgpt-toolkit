@@ -356,6 +356,15 @@
         layer.querySelector('.ag-dim').addEventListener('click', sluit);
         x.addEventListener('click', sluit);
         koppelFormulier(layer.querySelector('.ag-cal'));
+        // de agenda van Google heeft even nodig: zeg dat, tot hij er staat
+        var agenda = layer.querySelector('.ag-cal iframe');
+        if (agenda) {
+          var laadt = document.createElement('p');
+          laadt.className = 'ag-laadt';
+          laadt.textContent = 'De agenda van Google laadt. Dat duurt een paar seconden.';
+          agenda.parentNode.insertBefore(laadt, agenda);
+          agenda.addEventListener('load', function () { if (laadt.parentNode) laadt.parentNode.removeChild(laadt); });
+        }
         // de pagina eronder scrolt niet mee; de agenda en het formulier zelf wel
         ['wheel', 'touchmove'].forEach(function (ev) {
           layer.addEventListener(ev, function (e) {

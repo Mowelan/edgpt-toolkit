@@ -110,7 +110,9 @@
 .edtk.ag-layer .ag-cal{flex:1;min-height:0;isolation:isolate;overflow:auto;overscroll-behavior:contain;border-radius:3px;
   background:linear-gradient(to bottom,rgba(26,26,26,.07),rgba(26,26,26,0) 22px),var(--yellow-tint);
   box-shadow:0 1px 0 rgba(26,26,26,.06),0 18px 16px -12px rgba(26,26,26,.38)}
-.edtk.ag-layer .ag-cal iframe{display:block;width:100%;height:100%;border:0;mix-blend-mode:multiply}
+.edtk.ag-layer .ag-cal iframe{position:relative;display:block;width:100%;height:100%;border:0;mix-blend-mode:multiply}
+.edtk.ag-layer .ag-cal{position:relative}
+.edtk.ag-layer .ag-laadt{position:absolute;left:0;right:0;top:38%;margin:0;padding:0 28px;text-align:center;font-size:15.5px;color:var(--ink70)}
 .edtk.ag-layer .ag-paneel{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;
   min-height:100%;padding:40px 28px;color:var(--ink70);font-size:15.5px}
 .edtk.ag-layer .ag-paneel strong{font:700 22px/1.2 var(--head);letter-spacing:-.01em;color:var(--ink)}
