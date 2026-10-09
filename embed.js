@@ -269,6 +269,10 @@
       var data = window.EDGPT_TOOLKIT;
       [].forEach.call(roots, function (r) {
         var view = r.getAttribute('data-view');
+        // een pagina uit PAGES herkent zichzelf ook aan zijn adres (www.ed-gpt.nl/adviesgesprek),
+        // zodat een gekopieerd codeblok in Squarespace niet aangepast hoeft te worden
+        var pad = location.pathname.replace(/\/+$/, '').split('/').pop();
+        if (PAGES.indexOf(pad) > -1) view = pad;
         if (PAGES.indexOf(view) > -1) mountPage(r, data, view);
         else if (/^(links|linkinbio)$/.test(view)) mountLinks(r, data);
         else mountToolkit(r, data);
