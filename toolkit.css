@@ -201,3 +201,12 @@
 .edtk .tk-team .tk-strip a{flex-basis:108px}
 .edtk .tk-team .tk-strip span{hyphens:manual;-webkit-hyphens:manual}
 .edtk .tk-spoor h2 + .tk-rail{margin-top:4px}
+
+/* link in bio: gratis AI-adviesgesprek, bovenaan (12-10-2026) */
+.edtk .tk-advies{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:6px;width:100%;margin:0 0 14px;padding:20px 20px 18px;border-radius:22px;background:var(--yellow);color:var(--ink);text-align:left;border:1.5px solid var(--ink);box-shadow:0 14px 26px -16px rgba(26,26,26,.5);transition:transform .15s}
+.edtk .tk-advies:hover{transform:translateY(-2px);background:var(--yellow-hover)}
+.edtk .tk-advies-k{font:600 12px/1 var(--body);letter-spacing:.18em;text-transform:uppercase}
+.edtk .tk-advies .tk-advies-t{font:700 31px/1.02 var(--head);letter-spacing:-.025em}
+.edtk .tk-advies-s{font-size:15px;line-height:1.4;color:rgba(26,26,26,.82);max-width:30ch}
+.edtk .tk-advies-go{margin-top:8px;background:var(--ink);color:var(--yellow);font:700 15px/1 var(--body);border-radius:999px;padding:12px 20px}
+.edtk .tk-advies::after{content:"";position:absolute;right:18px;top:18px;width:16px;height:16px;border-radius:50%;background:var(--cream);box-shadow:inset 0 0 0 2px var(--ink)}

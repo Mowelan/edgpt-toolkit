@@ -172,6 +172,41 @@
     ['YoungCapital', 'https://images.squarespace-cdn.com/content/6916e92cba58a67204dfe745/76a54a13-a389-4091-9397-d8cdf9a7a8fd/youngcapital_black.png'],
     ['Parkeren Delft', 'https://images.squarespace-cdn.com/content/6916e92cba58a67204dfe745/1327b6b7-d258-480d-9a1f-d7dadb42bd54/ParkerenDelft-Logo.png']
   ];
+  /* Aantal plekken van het adviesgesprek op de kaart: zelfde bron als www.ed-gpt.nl/adviesgesprek (json plus teller in de agenda). */
+  function adviesTeller(root) {
+    var el = root.querySelector('[data-advies]'), knop = root.querySelector('.tk-advies-go');
+    if (!el) return;
+    var MND = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+    var d = new Date(), y = d.getFullYear(), m = d.getMonth() + 1;
+    try {
+      new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam', year: 'numeric', month: '2-digit' })
+        .formatToParts(d).forEach(function (p) { if (p.type === 'year') y = +p.value; if (p.type === 'month') m = +p.value; });
+    } catch (e) {}
+    var key = y + '-' + (m < 10 ? '0' : '') + m, naam = MND[m - 1];
+    function lees(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function schrijf(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+    function toon(vrij) {
+      schrijf('edgpt-promo-vrij-' + key, String(vrij));
+      if (vrij === 0) {
+        el.textContent = naam.charAt(0).toUpperCase() + naam.slice(1) + ' zit vol. Zet je op de wachtlijst.';
+        if (knop) knop.textContent = 'Naar de wachtlijst';
+      } else {
+        el.textContent = 'Nog ' + vrij + (vrij === 1 ? ' plek' : ' plekken') + ' in ' + naam + '. 30 minuten online, geen pitch.';
+      }
+    }
+    var bekend = lees('edgpt-promo-vrij-' + key);
+    if (bekend !== null) toon(+bekend);
+    fetch(BASE + 'adviesgesprek.json?v=' + BUST).then(function (r) { return r.json(); }).then(function (cfg) {
+      var n = cfg.plekken || 5, start = cfg.start == null ? n : cfg.start;
+      function vrij(g) { return Math.max(0, Math.min(n, start - g)); }
+      if (bekend === null) toon(vrij((cfg.geboekt || {})[key] || 0));
+      if (!cfg.scriptUrl) return;
+      return fetch(cfg.scriptUrl + (cfg.scriptUrl.indexOf('?') < 0 ? '?' : '&') + 'maand=' + key + '&vers=1')
+        .then(function (r) { return r.json(); })
+        .then(function (t) { if (t && typeof t.geboekt === 'number') toon(vrij(t.geboekt)); });
+    }).catch(function () {});
+  }
+
   function mountLinks(root, data) {
     root.classList.add('tk-links');
     var list = data.goodies.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
@@ -195,6 +230,11 @@
       '<p class="tk-bio-name">' + esc(p.name || 'Ed van der Molen') + ' <span>· EdGPT</span></p>' +
       '<h1>' + esc(p.headline || 'AI begrijpelijk maken voor de gewone mens.') + '</h1>' +
       '<p class="tk-sub">' + esc(p.tagline || '') + '</p></header>';
+
+    // gratis AI-adviesgesprek (Ed, 12-10-2026): bovenaan, met het live aantal plekken
+    h += '<a class="tk-advies" href="' + SITE + '/adviesgesprek" data-spoor="advies"><span class="tk-advies-k">Gratis</span>' +
+      '<span class="tk-t tk-advies-t">AI-adviesgesprek</span><span class="tk-advies-s" data-advies>30 minuten online, geen pitch. Jouw vraag, mijn advies.</span>' +
+      '<span class="tk-advies-go">Claim je plek</span></a>';
 
     if (top) {
       h += '<a class="tk-hero-card" href="' + goodieHref(top, true) + '" data-spoor="video">' + (top.image ? '<img src="' + BASE + top.image + '" alt="" width="1600" height="900">' : '') +
@@ -235,6 +275,7 @@
     }
     h += '</section><p class="tk-links-foot"><a href="' + SITE + '">www.ed-gpt.nl</a></p></div>';
     root.innerHTML = h;
+    adviesTeller(root);
 
     // ankers zelf afhandelen: de site heeft smooth scroll en een vaste header
     root.addEventListener('click', function (e) {
