@@ -1,0 +1,7 @@
+Third-party code in this folder
+
+binjgb.js and binjgb-*.wasm: binjgb, a Game Boy emulator by Ben Smith (https://github.com/binji/binjgb),
+MIT License. Built and packaged by rgbds-live (https://github.com/daid/rgbds-live), MIT License,
+Copyright (c) 2023 daid; full text in LICENSE-rgbds-live.txt.
+
+The emulator glue in ../speler.js is based on emulator.js from rgbds-live (MIT).

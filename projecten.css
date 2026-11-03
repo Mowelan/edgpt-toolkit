@@ -1,0 +1,46 @@
+/* Projectenpagina (www.ed-gpt.nl/projecten), bovenop toolkit.css en scoped onder .edtk */
+.edtk .pj-item{display:grid;gap:clamp(20px,3vw,40px);padding:clamp(28px,4vw,48px) 0;border-top:1px solid var(--line)}
+.edtk .pj-item:first-of-type{border-top:0;padding-top:0}
+/* tekst boven, speelvlak over de volle breedte: de spellen hebben ruimte nodig (Haaibert vraagt minstens ~500 px hoogte) */
+@media(min-width:960px){
+  .edtk .pj-tekst{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(220px,1fr);column-gap:clamp(28px,4vw,56px);align-items:end}
+  .edtk .pj-tekst > :not(.pj-zij){grid-column:1}
+  .edtk .pj-zij{grid-column:2;grid-row:1 / span 6;align-self:end}
+}
+.edtk .pj-tekst h2{font-size:clamp(30px,3.6vw,44px);margin:14px 0 16px}
+.edtk .pj-tekst p{color:var(--ink70)}
+.edtk .pj-feiten{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.edtk .pj-feiten li{font:500 13px/1 var(--mono);padding:8px 10px;border-radius:8px;background:var(--paper);color:var(--ink)}
+.edtk .pj-noot{font-size:14px;color:var(--ink50)}
+.edtk .pj-link{display:inline-block;margin-top:4px;font-weight:700;border-bottom:1.5px solid var(--ink)}
+.edtk .pj-link:hover{color:var(--purple-dark);border-color:var(--purple-dark)}
+
+.edtk .pj-stage{position:relative;aspect-ratio:16/9;min-height:540px;max-height:82vh;width:100%;border-radius:20px;overflow:hidden;background:var(--ink);border:1.5px solid var(--ink)}
+.edtk .pj-stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#000}
+.edtk .pj-stage.is-aan{border-radius:20px 20px 0 0;overflow:visible;margin-bottom:52px}
+.edtk .pj-stage.is-aan iframe{border-radius:18px 18px 0 0}
+.edtk .pj-poster{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;cursor:pointer;background:#16181d;display:block}
+.edtk .pj-poster img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease,filter .3s}
+.edtk .pj-poster.is-pas img{object-fit:contain;padding:6%}
+.edtk .pj-poster:hover img{transform:scale(1.02);filter:brightness(.9)}
+.edtk .pj-play{position:absolute;left:clamp(14px,2.4vw,24px);bottom:clamp(14px,2.4vw,24px);display:inline-flex;align-items:center;gap:10px;background:var(--yellow);color:var(--ink);font:700 16px/1 var(--body);padding:16px 24px 16px 18px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.28);white-space:nowrap;transition:transform .2s;transform-origin:left bottom}
+.edtk .pj-play svg{width:22px;height:22px}
+.edtk .pj-poster:hover .pj-play{transform:scale(1.04)}
+.edtk .pj-balk{position:absolute;left:-1.5px;right:-1.5px;top:100%;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;padding:8px 10px;background:var(--ink);border-radius:0 0 20px 20px}
+.edtk .pj-knop{font:600 13px/1 var(--body);color:var(--cream);background:transparent;border:1px solid rgba(250,247,241,.28);border-radius:999px;padding:9px 14px;cursor:pointer}
+.edtk .pj-knop:hover{border-color:var(--cream)}
+.edtk .pj-stage:fullscreen{border:0;border-radius:0;margin:0;background:#000}
+.edtk .pj-stage:fullscreen iframe{border-radius:0}
+.edtk .pj-stage:fullscreen .pj-balk{display:none}
+.edtk .pj-tools{margin-top:clamp(20px,3vw,32px);padding-top:clamp(20px,3vw,32px);border-top:1px solid var(--line);color:var(--ink70)}
+.edtk .pj-tools a{font-weight:700;border-bottom:1.5px solid var(--ink);color:var(--ink)}
+
+/* telefoon en smal: hoger speelvlak, zodat een staand spel en de Game Boy met knoppen passen */
+@media(max-width:720px){
+  .edtk .pj-stage{aspect-ratio:auto;min-height:0;max-height:none;height:min(78svh,680px)}
+  .edtk .pj-play{font-size:15px;padding:14px 20px 14px 16px}
+  .edtk .pj-balk{justify-content:stretch}
+  .edtk .pj-knop{flex:1;text-align:center;padding:10px 6px;white-space:nowrap;font-size:12.5px}
+}
+.edtk .pj-tekst .tk-pill{justify-self:start;align-self:start}
+.edtk .pj-tekst{max-width:1100px}

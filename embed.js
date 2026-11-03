@@ -2,7 +2,8 @@
  * EdGPT Toolkit embed.
  * Squarespace-codeblok:  <div class="edgpt-toolkit" data-view="toolkit"></div>
  *                        <script src="https://mowelan.github.io/edgpt-toolkit/embed.js" defer></script>
- * data-view: "toolkit" (www.ed-gpt.nl/tools: overzicht + tools via #slug) of "linkinbio" (www.ed-gpt.nl/linkinbio; "links" werkt ook).
+ * data-view: "toolkit" (www.ed-gpt.nl/tools: overzicht + tools via #slug), "linkinbio" (www.ed-gpt.nl/linkinbio; "links" werkt ook)
+ *            of een pagina uit PAGES ("adviesgesprek", "projecten").
  * Nieuwe goodie = regel in goodies.js plus (bij een tool) goodies/{slug}.js. Squarespace blijft ongemoeid.
  */
 (function () {
@@ -291,7 +292,7 @@
   }
 
   /* ---------- losse pagina met eigen module en stijl (bv. www.ed-gpt.nl/adviesgesprek) ---------- */
-  var PAGES = ['adviesgesprek'];
+  var PAGES = ['adviesgesprek', 'projecten'];
   function mountPage(root, data, name) {
     api.logos = LOGOS;
     api.css(BASE + name + '.css');
