@@ -44,3 +44,13 @@
 }
 .edtk .pj-tekst .tk-pill{justify-self:start;align-self:start}
 .edtk .pj-tekst{max-width:1100px}
+
+/* eigenScherm: schermvullend over de hele site (boven de promo-pop-up) */
+html.pj-los-open,html.pj-los-open body{overflow:hidden!important}
+.pj-los.edtk{position:fixed;inset:0;z-index:2147483600;display:flex;flex-direction:column;background:#000;margin:0;max-width:none;padding:0;border-radius:0}
+.edtk .pj-los-balk{flex:none;display:flex;align-items:center;gap:14px;padding:8px 12px;padding-top:max(8px,env(safe-area-inset-top));background:var(--ink);color:var(--cream)}
+.edtk .pj-los-terug{display:inline-flex;align-items:center;gap:6px;font:600 14px/1 var(--body);color:var(--cream);background:transparent;border:1px solid rgba(250,247,241,.28);border-radius:999px;padding:9px 14px 9px 10px;cursor:pointer}
+.edtk .pj-los-terug:hover{border-color:var(--cream)}
+.edtk .pj-los-terug svg{width:16px;height:16px}
+.edtk .pj-los-titel{font:700 15px/1 var(--body);opacity:.7}
+.pj-los.edtk iframe{flex-basis:0;min-height:0;flex:1;width:100%;border:0;display:block;background:#000}

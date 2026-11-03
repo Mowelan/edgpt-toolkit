@@ -4,6 +4,7 @@
  *
  * Elk project draait in de pagina zelf: een klik op het beeld zet het spel of de app in een iframe op die plek.
  * Er draait er steeds één tegelijk (WebGL en de emulator zijn zwaar op een telefoon).
+ * eigenScherm: het project opent schermvullend over de hele pagina, met een terugknop (Ed, 3 nov: Haaibert niet tussen de rest).
  * Nieuw project = een regel in PROJECTEN; de app zelf staat in projecten/{slug}/ of op een eigen adres (url).
  */
 (function () {
@@ -18,7 +19,8 @@
       ],
       feiten: ['Three.js', 'Stemmen met ElevenLabs', 'Gebouwd met Claude Code'],
       start: 'Speel Haaibert',
-      noot: 'Zet je geluid aan.',
+      noot: 'Het spel opent schermvullend. Zet je geluid aan.',
+      eigenScherm: true,
       beeld: 'img/proj-haaibert.webp',
       pad: 'projecten/haaibert/'
     },
@@ -113,6 +115,37 @@
       f.focus();
       api.track('project_start', { project: p.slug });
     }
+    // Schermvullend over de hele site heen, ook op iPhone (geen Fullscreen API nodig).
+    // De terugknop van de browser sluit het weer: daarvoor een eigen geschiedenisregel zonder adreswijziging.
+    var los = null;
+    function sluitLos() {
+      if (!los) return;
+      los.remove(); los = null;
+      document.documentElement.classList.remove('pj-los-open');
+    }
+    function openLos(p) {
+      if (actief) stop(actief);
+      los = document.createElement('div');
+      los.className = 'edtk pj-los';
+      los.setAttribute('role', 'dialog');
+      los.setAttribute('aria-modal', 'true');
+      los.setAttribute('aria-label', p.titel);
+      los.innerHTML = '<div class="pj-los-balk">' +
+        '<button type="button" class="pj-los-terug"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M15 5l-7 7 7 7"/></svg>Terug naar projecten</button>' +
+        '<span class="pj-los-titel">' + esc(p.titel) + '</span></div>' +
+        '<iframe src="' + adres(p) + '" title="' + esc(p.titel) + '" allow="autoplay; fullscreen"></iframe>';
+      document.body.appendChild(los);
+      document.documentElement.classList.add('pj-los-open');
+      history.pushState({ pjLos: p.slug }, '');
+      los.querySelector('.pj-los-terug').addEventListener('click', function () {
+        if (history.state && history.state.pjLos) history.back(); else sluitLos();
+      });
+      los.querySelector('iframe').focus();
+      api.track('project_start', { project: p.slug });
+    }
+    window.addEventListener('popstate', sluitLos);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && los && history.state && history.state.pjLos) history.back(); });
+
     function groot(stage) {
       var req = stage.requestFullscreen || stage.webkitRequestFullscreen;
       if (req && (document.fullscreenEnabled || document.webkitFullscreenEnabled)) {
@@ -126,7 +159,10 @@
     root.addEventListener('click', function (e) {
       var stage = e.target.closest && e.target.closest('.pj-stage');
       if (!stage) return;
-      if (e.target.closest('.pj-poster')) start(stage);
+      if (e.target.closest('.pj-poster')) {
+        var p = PROJECTEN[+stage.getAttribute('data-i')];
+        if (p.eigenScherm) openLos(p); else start(stage);
+      }
       var doe = e.target.closest('[data-doe]');
       if (doe && doe.getAttribute('data-doe') === 'stop') stop(stage);
       if (doe && doe.getAttribute('data-doe') === 'groot') groot(stage);
