@@ -5,6 +5,7 @@
  * Elk project draait in de pagina zelf: een klik op het beeld zet het spel of de app in een iframe op die plek.
  * Er draait er steeds één tegelijk (WebGL en de emulator zijn zwaar op een telefoon).
  * eigenScherm: het project opent schermvullend over de hele pagina, met een terugknop (Ed, 3 nov: Haaibert niet tussen de rest).
+ * Met eigenScherm opent de link /projecten#{slug} het project meteen schermvullend (Ed, 4 nov: direct kunnen linken).
  * Nieuw project = een regel in PROJECTEN; de app zelf staat in projecten/{slug}/ of op een eigen adres (url).
  */
 (function () {
@@ -170,6 +171,11 @@
 
     // direct naar een project via #slug (bv. www.ed-gpt.nl/projecten#haaibert)
     var slug = (location.hash || '').slice(1), doel = slug && root.querySelector('#' + slug.replace(/[^a-z0-9-]/gi, ''));
-    if (doel) setTimeout(function () { window.scrollTo(0, doel.getBoundingClientRect().top + window.pageYOffset - 90); }, 50);
+    // Een project met eigenScherm opent via die link meteen schermvullend; terug landt op het project in de lijst.
+    if (doel) setTimeout(function () {
+      window.scrollTo(0, doel.getBoundingClientRect().top + window.pageYOffset - 90);
+      var p = PROJECTEN.filter(function (x) { return x.slug === doel.id; })[0];
+      if (p && p.eigenScherm) openLos(p);
+    }, 50);
   };
 })();
