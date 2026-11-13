@@ -44,7 +44,7 @@
     { g: 'heg', r: 426 / 402 },
     { t: 'ik leg mijn telefoon weg', van: 'Joost' }
   ];
-  var TICKER = ['sneaky om het hoekje', 'door een verrekijker', 'proosten met champagne', 'verdwijnen in de heg', 'roze lasers erbij', 'twee keer zo snel'];
+  var TICKER = ['sneaky om het hoekje', 'door een verrekijker', 'proosten met champagne', 'verdwijnen in de heg', 'roze lasers erbij', 'op 2x snelheid'];
   var HEG_FRAMES = 9;
 
   var CSS = '' +
@@ -163,7 +163,8 @@
     '.gb figcaption{font-size:14px;color:var(--ink50);margin-top:16px;}' +
 
     /* scroll = afspelen */
-    '.gb-scrub{background:var(--ink);border-radius:28px;padding:clamp(16px,3vw,26px);margin:22px 0 10px;color:#fff;}' +
+    '.gb-scrub-wrap{position:relative;margin:22px 0 10px;height:calc(var(--sh,560px) + 110vh);}' +
+    '.gb-scrub{position:sticky;top:max(16px,calc(50vh - var(--sh,560px) / 2));background:var(--ink);border-radius:28px;padding:clamp(16px,3vw,26px);color:#fff;}' +
     '.gb-scrub-groot{position:relative;aspect-ratio:478/357;border-radius:18px;overflow:hidden;background-color:#222;background-size:900% 100%;background-repeat:no-repeat;}' +
     '.gb-scrub-groot span{position:absolute;right:10px;top:10px;font:700 13px "Space Grotesk",sans-serif;background:var(--y);color:var(--ink);border-radius:8px;padding:3px 9px;}' +
     '.gb-film{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-top:10px;}' +
@@ -203,7 +204,7 @@
     '.gb-chat{inset:0;transform:none!important;}.gb-sticker{display:none;}.gb-stage{height:420px;}.gb-hero{padding:28px 16px 32px;}' +
     '.gb-prompt .rij small{display:none;}.gb-film{gap:3px;}.gb-part2{flex-direction:column;align-items:flex-start;}}' +
     '@media(prefers-reduced-motion:reduce){.gb *,.gb *::before{animation:none!important;transition:none!important;}' +
-    '.gb-rv,.gb-fade,.gb-w>span{opacity:1!important;transform:none!important;}.gb-mark::before{transform:rotate(-1.5deg)!important;}}';
+    '.gb-scrub-wrap{height:auto!important;}.gb-scrub{position:static!important;}.gb-rv,.gb-fade,.gb-w>span{opacity:1!important;transform:none!important;}.gb-mark::before{transform:rotate(-1.5deg)!important;}}';
 
   /* Lucide-iconen (ISC-licentie), inline */
   function ic(paths) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + '</svg>'; }
@@ -218,6 +219,7 @@
     telefoon: ic('<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>'),
     upload: ic('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/>'),
     info: ic('<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>'),
+    snel: ic('<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>'),
     play: ic('<polygon points="6 3 20 12 6 21 6 3"/>'),
     insta: ic('<rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>')
   };
@@ -275,8 +277,8 @@
 
       sec('03', 'Jezelf in een bekend gifje',
         '<p class="gb-rv">Hier zit een addertje. Als je een gifje uploadt, ziet ChatGPT alleen één stilstaand plaatje en weet hij niet hoe het beweegt. Er zijn twee manieren om dat op te lossen.</p>' +
-        '<div class="gb-scrub gb-rv" aria-hidden="true"><div class="gb-scrub-groot"><span>frame 1/9</span></div><div class="gb-film">' + new Array(HEG_FRAMES + 1).join('<i></i>') + '</div>' +
-        '<p>Scroll rustig door: dit gifje bestaat uit <b>9 losse frames</b>. ChatGPT ziet er bij een upload maar één van. Geef je hem alle frames, dan snapt hij de beweging.</p></div>' +
+        '<div class="gb-scrub-wrap"><div class="gb-scrub gb-rv" aria-hidden="true"><div class="gb-scrub-groot"><span>frame 1/9</span></div><div class="gb-film">' + new Array(HEG_FRAMES + 1).join('<i></i>') + '</div>' +
+        '<p>Scroll rustig door: dit gifje bestaat uit <b>9 losse frames</b>. ChatGPT ziet er bij een upload maar één van. Geef je hem alle frames, dan snapt hij de beweging.</p></div></div>' +
         '<h3 class="gb-h3 gb-rv">Snel: één screenshot en een beschrijving</h3>' +
         '<p class="gb-rv">Maak een screenshot van het gifje op het mooiste moment. Stuur die mee met een foto van jezelf, en beschrijf in de prompt kort wat er in het gifje gebeurt.</p>' +
         prompt('Met de screenshot en je foto erbij', P3) +
@@ -286,8 +288,9 @@
         '<div class="gb-tip gb-rv">' + I.telefoon + '<div><strong>Tip voor je telefoon:</strong> een gifje uit WhatsApp staat op je iPhone vaak als korte video. Die kun je ook gewoon in de tool zetten.</div></div>', 'gb-bekend') +
 
       sec('04', 'Daarna gewoon doorpraten',
-        '<p class="gb-rv">Als je gifje er staat, kan je er gewoon op doorgaan. In de video deed ik er roze lasers bij en zette ik hem sneller. Snelheid kan ook via het knopje op je gifje, van 0,5x tot 2x.</p>' +
-        prompt('Iets toevoegen', 'Doe er roze lasers bij.') + prompt('Sneller', 'Maak hem twee keer zo snel.')) +
+        '<p class="gb-rv">Als je gifje er staat, kan je er gewoon op doorgaan. In de video deed ik er roze lasers bij en zette ik hem sneller.</p>' +
+        prompt('Iets toevoegen', 'Doe er roze lasers bij.') +
+        '<div class="gb-tip gb-rv">' + I.snel + '<div><strong>Sneller of langzamer?</strong> Dat is geen prompt maar een instelling. Klik op het knopje linksonder op je gifje (GIF speed) en kies een snelheid van 0,25x tot 2x.</div></div>') +
 
       sec('05', 'Part 2: je gifje online zetten',
         '<div class="gb-part2 gb-rv"><span class="ic">' + I.upload + '</span><p>In part 2 laat ik zien hoe je je gifje online zet, zodat iedereen hem kan vinden. Die komt hier te staan zodra hij er is.</p></div>') +
@@ -391,11 +394,18 @@
     }
     zet(0);
     if (STIL) return;
+    // Het blok staat vast (sticky) midden in beeld; de wrapper eromheen is 110vh hoger dan het blok.
+    // Alleen tijdens dat vaststaan lopen de frames af, met een korte pauze op het eerste en laatste frame.
+    var wrap = box.parentNode;
+    function meet() { wrap.style.setProperty('--sh', box.offsetHeight + 'px'); }
+    meet();
+    if ('ResizeObserver' in window) new ResizeObserver(meet).observe(box); else window.addEventListener('resize', meet);
     scrubUpdate = function (vh) {
-      var r = box.getBoundingClientRect();
-      if (r.bottom < 0 || r.top > vh) return;
-      // van 'onderkant in beeld' tot 'bovenkant bijna uit beeld' loopt het gifje één keer door
-      var p = Math.min(1, Math.max(0, (vh * 0.9 - r.top) / (vh * 0.9)));
+      var w = wrap.getBoundingClientRect();
+      if (w.bottom < 0 || w.top > vh) return;
+      var vast = parseFloat(getComputedStyle(box).top) || 0, loop = w.height - box.offsetHeight;
+      var p = Math.min(1, Math.max(0, (vast - w.top) / Math.max(1, loop)));
+      p = Math.min(1, Math.max(0, (p - 0.08) / 0.84));
       zet(Math.min(HEG_FRAMES - 1, Math.floor(p * HEG_FRAMES)));
     };
   }
