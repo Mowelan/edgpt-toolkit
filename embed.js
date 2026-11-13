@@ -89,8 +89,10 @@
     { id: 'team', title: 'Voor je team', empty: '' },
     { id: 'video', title: 'Uit mijn video\'s', empty: 'Bij mijn video\'s komt hier steeds iets bij. Volg me op <a href="' + LINKS.instagram + '" target="_blank" rel="noopener">Instagram</a> of <a href="' + LINKS.tiktok + '" target="_blank" rel="noopener">TikTok</a>, dan zie je als eerste wat er nieuw is.' }
   ];
+  // alleenBio (13-11-2026): staat alleen op /linkinbio, niet op /tools (Ed: /tools niet volproppen met video-goodies)
+  function opTools(data) { return data.goodies.filter(function (g) { return !g.alleenBio; }); }
   function newest(data) {
-    return data.goodies.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; })[0];
+    return opTools(data).sort(function (a, b) { return a.date < b.date ? 1 : -1; })[0];
   }
   function card(g) {
     return '<a class="tk-card" href="' + goodieHref(g) + '">' + (g.icon ? '<img class="tk-card-icon" src="' + BASE + g.icon + '" alt="" width="160" height="160" loading="lazy">' : '') + '<span class="tk-pill">' + esc(g.type) + '</span>' +
@@ -110,7 +112,7 @@
         '</div><div class="tk-feature-art' + (top.image ? ' has-image' : '') + '" aria-hidden="true">' + (top.image ? '<img src="' + BASE + top.image + '" alt="">' : (top.art || '')) + '</div></article>';
     }
     GROUPS.forEach(function (gr) {
-      var items = data.goodies.filter(function (g) { return (g.group || 'video') === gr.id && g !== top; });
+      var items = opTools(data).filter(function (g) { return (g.group || 'video') === gr.id && g !== top; });
       if (!items.length && !gr.empty) return;
       h += '<h2 class="tk-section-title">' + gr.title + '</h2>';
       h += items.length ? '<div class="tk-grid">' + items.map(card).join('') + '</div>' : '<p class="tk-follow">' + gr.empty + '</p>';

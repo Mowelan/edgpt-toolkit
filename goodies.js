@@ -18,6 +18,21 @@ window.EDGPT_TOOLKIT = {
   },
   goodies: [
     {
+      slug: 'gifjes',
+      title: 'Gifjes van jezelf maken',
+      type: 'Prompts',
+      group: 'video',
+      alleenBio: true,
+      href: 'https://www.ed-gpt.nl/gif',
+      cta: 'Naar de prompts',
+      line: 'Mijn prompts om jezelf in een gifje te zetten met ChatGPT, plus een tool die een bekend gifje omzet naar losse frames.',
+      short: 'Uit de gifjes-video: mijn prompts en de frames-tool',
+      video: 'mijn video over gifjes maken met ChatGPT',
+      keyword: 'GIF',
+      date: '2026-11-13',
+      image: 'img/gif-jezelf.webp'
+    },
+    {
       slug: 'video-prompts',
       title: 'Video Prompt Bouwer',
       type: 'Tool',
