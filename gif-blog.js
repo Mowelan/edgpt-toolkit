@@ -25,6 +25,9 @@
   var P3 = 'Maak een gifje van mij op basis van deze referentie-image. De tweede foto ben ik. Vervang de persoon door mij. In het gifje gebeurt dit: [beschrijf kort de beweging, bijvoorbeeld: hij lacht, kijkt opzij en zwaait].';
 
   var CSS = '' +
+    '.edgpt-gif-blog{max-width:780px;margin:0 auto;padding:clamp(24px,5vw,56px) 16px 40px;}' +
+    '.gb-kop{margin-bottom:18px;}.gb-kicker{font:600 12px "Raleway",sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--ink50);}' +
+    '.gb h1{font:700 clamp(34px,6vw,56px)/1.05 "Space Grotesk",sans-serif;letter-spacing:-.035em;margin:10px 0 0;}' +
     '.gb{--ink:#1A1A1A;--ink70:#4A4A4A;--ink50:#7A7A7A;--y:#FFD02F;--yt:#FFF4CC;--paper:#F2EEE4;--line:rgba(26,26,26,.12);font-family:"Raleway",system-ui,sans-serif;color:var(--ink);font-size:19px;line-height:1.7;}' +
     '.gb *{box-sizing:border-box;}.gb [hidden]{display:none!important;}' +
     '.gb p{margin:0 0 18px;}' +
@@ -64,6 +67,7 @@
   function render(root) {
     if (!document.getElementById('gb-css')) { var st = document.createElement('style'); st.id = 'gb-css'; st.textContent = CSS; document.head.appendChild(st); }
     root.innerHTML = '<article class="gb">' +
+      '<header class="gb-kop"><span class="gb-kicker">Uit mijn video</span><h1>Gifjes van jezelf maken met ChatGPT</h1></header>' +
       '<p class="lead">Je zag mijn video en je wilt jezelf ook in een gifje zetten. Hieronder staan mijn prompts, met een knop om ze te kopiëren, en een tool om jezelf in een bekend gifje te zetten.</p>' +
 
       '<h2>Wat je nodig hebt</h2>' +
