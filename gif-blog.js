@@ -25,6 +25,8 @@
   var P3 = 'Maak een gifje van mij op basis van deze referentie-image. De tweede foto ben ik. Vervang de persoon door mij. In het gifje gebeurt dit: [beschrijf kort de beweging, bijvoorbeeld: hij lacht, kijkt opzij en zwaait].';
 
   var CSS = '' +
+    '.fluid-engine:has(.edgpt-gif-blog){grid-template-rows:repeat(8,minmax(0,auto))!important;row-gap:0!important}' +
+    '.fluid-engine:has(.edgpt-gif-blog) .fe-block:has(.edgpt-gif-blog){grid-row:1/-1!important;grid-column:1/-1!important}' +
     '.edgpt-gif-blog{max-width:780px;margin:0 auto;padding:clamp(24px,5vw,56px) 16px 40px;}' +
     '.gb-kop{margin-bottom:18px;}.gb-kicker{font:600 12px "Raleway",sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--ink50);}' +
     '.gb h1{font:700 clamp(34px,6vw,56px)/1.05 "Space Grotesk",sans-serif;letter-spacing:-.035em;margin:10px 0 0;}' +
