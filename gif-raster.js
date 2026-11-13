@@ -181,23 +181,25 @@
 
   /* ---------- scherm ---------- */
   var CSS = '' +
-    '.gr{--ink:#1A1A1A;--ink70:#4A4A4A;--y:#FFD02F;--line:rgba(26,26,26,.14);font-family:"Raleway",system-ui,-apple-system,sans-serif;color:var(--ink);font-size:18px;line-height:1.55;border:1px solid var(--line);border-radius:22px;padding:clamp(18px,4vw,30px);background:#fff;margin:24px 0 32px;}' +
+    '.gr{--ink:#1A1A1A;--ink70:#4A4A4A;--y:#FFD02F;--line:rgba(26,26,26,.14);font-family:"Raleway",system-ui,-apple-system,sans-serif;color:var(--ink);font-size:18px;line-height:1.55;border:1px solid var(--line);border-radius:28px;padding:clamp(20px,4vw,34px);background:#fff;margin:24px 0 32px;box-shadow:0 1px 2px rgba(26,26,26,.04),0 30px 60px -36px rgba(26,26,26,.35);}' +
     '.gr *{box-sizing:border-box;}.gr [hidden]{display:none!important;}' +
     '.gr h3{font-family:"Space Grotesk",sans-serif;font-size:clamp(22px,2.6vw,26px);letter-spacing:-.02em;line-height:1.2;margin:0 0 6px;}' +
     '.gr p{margin:0 0 14px;}' +
-    '.gr-drop{display:block;border:2px dashed var(--line);border-radius:18px;padding:22px 18px;text-align:center;cursor:pointer;}' +
-    '.gr-drop.is-over{border-color:var(--ink);background:#fffbe8;}' +
+    '.gr-drop{display:block;border:1.5px dashed rgba(26,26,26,.2);border-radius:22px;padding:34px 18px;text-align:center;cursor:pointer;background:#FAF8F3;transition:border-color .2s,background .2s,transform .3s cubic-bezier(.2,.8,.2,1);}' +
+    '.gr-drop:hover{border-color:rgba(26,26,26,.4);background:#FFFBEA;}.gr-drop:hover .gr-btn{transform:translateY(-2px);box-shadow:0 12px 28px -10px rgba(26,26,26,.35);}' +
+    '.gr-drop.is-over{border-color:var(--ink);background:#FFF4CC;transform:scale(1.01);}' +
     '.gr-drop input{position:absolute;width:1px;height:1px;opacity:0;}' +
-    '.gr-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 24px;border-radius:999px;border:2px solid var(--ink);background:var(--ink);color:var(--y);font:700 17px "Raleway",system-ui,sans-serif;cursor:pointer;text-decoration:none;}' +
-    '.gr-btn.alt{background:#fff;color:var(--ink);}' +
+    '.gr-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 26px;border-radius:999px;border:0;background:var(--y);color:var(--ink);font:600 16px "Raleway",system-ui,sans-serif;cursor:pointer;text-decoration:none;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s cubic-bezier(.2,.8,.2,1),background .2s;}' +
+    '.gr-btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px -10px rgba(26,26,26,.35);}.gr-btn:active{transform:scale(.97);box-shadow:none;transition-duration:.08s;}' +
+    '.gr-btn.alt{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line);}.gr-btn.alt:hover{box-shadow:inset 0 0 0 1px rgba(26,26,26,.3),0 12px 28px -14px rgba(26,26,26,.3);}' +
     '.gr-btn:focus-visible,.gr-drop:focus-within,.gr-seg input:focus-visible+span,.gr textarea:focus-visible,.gr-frames a:focus-visible{outline:3px solid #2563eb;outline-offset:3px;}' +
     '.gr-sub{display:block;margin-top:10px;font-size:15px;color:var(--ink70);}' +
     '.gr-seg{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 4px;border:0;padding:0;}' +
     '.gr-seg legend{font-weight:700;margin-bottom:8px;padding:0;}' +
     '.gr-seg label{position:relative;}' +
     '.gr-seg input{position:absolute;opacity:0;width:1px;height:1px;}' +
-    '.gr-seg span{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border:2px solid var(--line);border-radius:999px;cursor:pointer;font-weight:600;}' +
-    '.gr-seg input:checked+span{border-color:var(--ink);background:var(--y);}' +
+    '.gr-seg span{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border:1px solid var(--line);border-radius:999px;cursor:pointer;font-weight:600;transition:border-color .2s,background .2s;}' +
+    '.gr-seg input:checked+span{border-color:var(--y);background:var(--y);}' +
     '.gr-status{min-height:1.5em;margin:14px 0 0;font-weight:600;}' +
     '.gr-status.err{color:#b42318;}' +
     '.gr-out{margin-top:18px;}' +
